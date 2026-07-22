@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Punto Ok · Presentación</title>
+  <meta name="description" content="Punto Ok — La nueva forma de gestionar Recursos Humanos." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <a class="brand" href="#" data-goto="0" aria-label="Punto Ok">
+      <img src="punto-ok-logo.svg" alt="Punto Ok" class="brand__logo" />
+    </a>
+    <div class="topbar__right">
+      <button class="iconbtn" id="gridBtn" title="Ver todas las diapositivas (G)" aria-label="Ver todas">
+        <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
+      </button>
+      <button class="iconbtn" id="fsBtn" title="Pantalla completa (F)" aria-label="Pantalla completa">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress"><div class="progress__bar" id="progressBar"></div></div>
+
+  <!-- DECK -->
+  <main class="deck" id="deck">
+
+    <!-- 1 · TITLE -->
+    <section class="slide slide--hero" data-title="Portada">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="hero-grid">
+        <div class="hero-copy">
+          <img src="punto-ok-logo.svg" alt="Punto Ok" class="hero-logo anim" />
+          <span class="kicker anim" data-anim="1">Recursos Humanos · Paraguay</span>
+          <h1 class="display display--hero anim" data-anim="2">La nueva forma<br>de gestionar<br><span class="accent">Recursos&nbsp;Humanos</span></h1>
+          <p class="subtle anim" data-anim="3">Control de asistencia, turnos y salarios en un solo sistema.</p>
+          <div class="pill-row pill-row--left anim" data-anim="4">
+            <span class="pill">+400 empresas</span>
+            <span class="pill">Web + App</span>
+            <span class="pill">10/10 recomiendan</span>
+          </div>
+        </div>
+        <div class="hero-visual anim" data-anim="3">
+          <img src="bg-pag1.png" alt="Plataforma Punto Ok en notebook y celular" class="hero-shot" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 2 · PROBLEMA -->
+    <section class="slide slide--split" data-title="El problema">
+      <div class="hero-glow hero-glow--soft" aria-hidden="true"></div>
+      <div class="hero-grid hero-grid--copy">
+        <div class="hero-copy">
+          <span class="kicker anim" data-anim="1">El punto de partida</span>
+          <h2 class="headline anim" data-anim="2">Gestionar RR.HH no debería depender de <span class="accent">planillas, papeles y mensajes sueltos</span></h2>
+          <p class="lead lead--2 anim" data-anim="3">Muchas empresas todavía manejan asistencia, turnos, cierres<br>salariales y reportes de forma manual o dispersa.</p>
+          <div class="callout callout--warn anim" data-anim="4">
+            <span class="callout__dot"></span>
+            <p><strong>Resultado:</strong> más errores, más tiempo perdido y menos control.</p>
+          </div>
+        </div>
+        <div class="hero-visual anim" data-anim="3">
+          <img src="bg-pag2.png" alt="Gestión manual de RR.HH: papeles, planillas y mensajes sueltos" class="hero-shot" />
+        </div>
+      </div>
+    </section>
+
+    <!-- 3 · IMPACTO -->
+    <section class="slide slide--center" data-title="Impacto">
+      <div class="s-inner">
+        <h2 class="headline center anim" data-anim="1">El problema no es solo administrativo.<br><span class="accent">Es operativo y financiero.</span></h2>
+        <div class="trio trio--center">
+          <div class="tile anim" data-anim="2"><div class="tile__ico tile__ico--img"><img src="tiempo.png" alt="" /></div><h3>Tiempo</h3><p>Cierres más lentos y tareas repetitivas.</p></div>
+          <div class="tile anim" data-anim="3"><div class="tile__ico tile__ico--img"><img src="control.png" alt="" /></div><h3>Control</h3><p>Marcaciones incompletas y poca visibilidad.</p></div>
+          <div class="tile anim" data-anim="4"><div class="tile__ico tile__ico--img"><img src="dinero.png" alt="" /></div><h3>Dinero</h3><p>Errores, horas extras mal calculadas y costos ocultos.</p></div>
+        </div>
+        <div class="dual-note anim" data-anim="5"><span class="down">↓ Menor productividad</span><span class="up">↑ Mayores costos</span></div>
+      </div>
+    </section>
+
+    <!-- 4 · ECOSISTEMA -->
+    <section class="slide slide--center" data-title="Ecosistema">
+      <div class="s-inner">
+        <span class="kicker center anim" data-anim="1">La solución</span>
+        <h2 class="headline center anim" data-anim="2">Un ecosistema <span class="accent">para cada rol</span></h2>
+        <div class="trio trio--center trio--expand">
+          <div class="tile tile--expand anim" data-anim="3" role="button" tabindex="0" aria-expanded="false">
+            <div class="tile__ico tile__ico--img"><img src="plataforma-web.png" alt="" /></div>
+            <h3>Plataforma Web</h3>
+            <p>Para administración, RR.HH. y gestión central.</p>
+            <span class="tile__more">Ver <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+            <div class="tile__reveal">
+              <img src="plataforma-web-pag4.png" alt="Plataforma web de Punto Ok" class="reveal-img reveal-img--laptop" />
+            </div>
+          </div>
+          <div class="tile tile--expand anim" data-anim="4" role="button" tabindex="0" aria-expanded="false">
+            <div class="tile__ico tile__ico--img"><img src="app-totem.png" alt="" /></div>
+            <h3>App Totem</h3>
+            <p>Para usos en puntos fijos de marcaciones.</p>
+            <span class="tile__more">Ver <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+            <div class="tile__reveal">
+              <img src="app-totem-pag4.png" alt="App Totem de Punto Ok" class="reveal-img reveal-img--phone" />
+            </div>
+          </div>
+          <div class="tile tile--expand anim" data-anim="5" role="button" tabindex="0" aria-expanded="false">
+            <div class="tile__ico tile__ico--img"><img src="app-colaboradores.png" alt="" /></div>
+            <h3>App Colaboradores</h3>
+            <p>Para marcar, consultar y operar desde el celular.</p>
+            <span class="tile__more">Ver <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9l6 6 6-6"/></svg></span>
+            <div class="tile__reveal">
+              <img src="app-colaboradores-pag4.png" alt="App Colaboradores de Punto Ok" class="reveal-img reveal-img--phone" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5 · DOS FORMAS DE MARCAR -->
+    <section class="slide slide--center" data-title="Formas de marcar">
+      <div class="s-inner">
+        <h2 class="headline center anim" data-anim="1">Una solución, <span class="accent">dos formas de marcar</span></h2>
+        <p class="lead center anim" data-anim="2">App Colaboradores y Tótem Facial según la necesidad de cada empresa.</p>
+        <div class="compare">
+          <article class="ccard anim" data-anim="3">
+            <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-totem.png" alt="Punto Ok Totem" /></span><div><strong>Punto Ok! Totem</strong><small>Marcación presencial</small></div></header>
+            <ul class="checks">
+              <li>Pensada para marcación presencial</li>
+              <li>Reconocimiento facial</li>
+              <li>Sin toque</li>
+              <li>Modo offline</li>
+              <li>Uso en puntos fijos de marcación</li>
+            </ul>
+            <div class="ccard__store">
+              <svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#00c4ff" d="M3.6 2.4c-.3.3-.5.8-.5 1.4v16.4c0 .6.2 1.1.5 1.4l.1.1L12 13.1v-.2L3.7 2.3z"/><path fill="#ffce00" d="M15 15.8l-3-3v-.2l3-3 3.6 2c1 .6 1 1.5 0 2.1l-3.6 2.1z"/><path fill="#ff3a44" d="M15.1 15.7L12 12.6l-8.4 8.5c.4.4.9.4 1.6 0l9.9-5.4z"/><path fill="#00e574" d="M15.1 8.3L5.2 2.9c-.7-.4-1.2-.4-1.6 0L12 11.4z"/></svg>
+              <span>Disponible en Google Play</span>
+            </div>
+          </article>
+          <article class="ccard anim" data-anim="4">
+            <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-colaboradores.png" alt="Punto Ok Colaboradores" /></span><div><strong>Punto Ok! Colaboradores</strong><small>Desde el celular</small></div></header>
+            <ul class="checks">
+              <li>Pensada para el colaborador</li>
+              <li>Marcación con reconocimiento facial</li>
+              <li>Geolocalización</li>
+              <li>Solicitudes en tiempo real</li>
+              <li>Uso desde el celular</li>
+            </ul>
+            <div class="ccard__store">
+              <svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#00c4ff" d="M3.6 2.4c-.3.3-.5.8-.5 1.4v16.4c0 .6.2 1.1.5 1.4l.1.1L12 13.1v-.2L3.7 2.3z"/><path fill="#ffce00" d="M15 15.8l-3-3v-.2l3-3 3.6 2c1 .6 1 1.5 0 2.1l-3.6 2.1z"/><path fill="#ff3a44" d="M15.1 15.7L12 12.6l-8.4 8.5c.4.4.9.4 1.6 0l9.9-5.4z"/><path fill="#00e574" d="M15.1 8.3L5.2 2.9c-.7-.4-1.2-.4-1.6 0L12 11.4z"/></svg>
+              <span>Disponible en Google Play</span>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6 · FUNCIONALIDADES -->
+    <section class="slide slide--center" data-title="Funcionalidades">
+      <div class="s-inner">
+        <span class="kicker center anim" data-anim="1">Todo desde la app</span>
+        <h2 class="headline center anim" data-anim="2">Marcación, historial y <span class="accent">gestión en tiempo real</span></h2>
+        <div class="quad">
+          <div class="qcard anim" data-anim="3"><h4>Movimientos</h4><p>Presencia · Permiso · Enfermedades</p></div>
+          <div class="qcard anim" data-anim="4"><h4>Pagos</h4><p>Anticipo · Compras · Movilidad · Bonus · Gratificaciones · Comisiones</p></div>
+          <div class="qcard anim" data-anim="5"><h4>Vacaciones</h4><p>Solicitud y control de vacaciones</p></div>
+          <div class="qcard anim" data-anim="6"><h4>Reposos</h4><p>Gestión de reposos médicos</p></div>
+        </div>
+        <p class="footnote anim" data-anim="7">Historial de marcaciones · Geolocalización · Face ID</p>
+      </div>
+    </section>
+
+    <!-- 7 · PLATAFORMA / MODULOS -->
+    <section class="slide" data-title="Plataforma">
+      <div class="s-inner s-inner--split">
+        <div class="split-l">
+          <span class="kicker anim" data-anim="1">La plataforma</span>
+          <h2 class="headline anim" data-anim="2">Una plataforma para ordenar la <span class="accent">gestión de personas</span></h2>
+          <p class="lead anim" data-anim="3"><strong>Punto Ok</strong> ayuda a las empresas a controlar asistencias, organizar turnos, gestionar información laboral y simplificar procesos de RR.HH. desde la web y apps móviles.</p>
+        </div>
+        <div class="chips anim" data-anim="4">
+          <span>Colaboradores</span><span>Turnos</span><span>Movimientos</span><span>Pagos</span>
+          <span>Planilla nominal</span><span>Aguinaldo</span><span>Vacaciones</span><span>Liquidaciones</span>
+          <span>Libros laborales</span><span>Notificaciones</span><span>Reportes</span><span>Firmas electrónicas</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8 · DEMO -->
+    <section class="slide slide--center slide--soft" data-title="Demo">
+      <div class="s-inner">
+        <div class="play anim" data-anim="1"><div class="play__btn">▶</div></div>
+        <h2 class="headline center anim" data-anim="2">Ahora veamos cómo funciona <span class="accent">en la práctica</span></h2>
+        <p class="lead center anim" data-anim="3">En la demo vamos a recorrer los puntos más importantes según la realidad de tu empresa.</p>
+        <img src="punto-ok-logo.svg" alt="Punto Ok" class="demo-logo anim" data-anim="4" />
+      </div>
+    </section>
+
+    <!-- 9 · CLIENTES -->
+    <section class="slide" data-title="Clientes">
+      <div class="s-inner s-inner--wide">
+        <h2 class="headline anim" data-anim="1">Empresas que ya confían en <span class="accent">Punto Ok</span></h2>
+        <div class="rubros anim" data-anim="2"><span>Industria</span><span>Comercio</span><span>Servicios</span><span>Logística</span><span>Agro</span><span>Retail</span></div>
+        <div class="clients">
+          <div class="bignum anim" data-anim="3"><b>+400</b><strong>EMPRESAS</strong><p>de distintos rubros ya confían en Punto Ok para gestionar personas, turnos y asistencias.</p></div>
+          <div class="logos anim" data-anim="4">
+            <div class="lbox">Agrofértil</div><div class="lbox">AgroAlianza</div><div class="lbox">JS Comercial</div><div class="lbox">Inacon</div>
+            <div class="lbox">SiderAgro</div><div class="lbox">UPE</div><div class="lbox">Mora Cué</div><div class="lbox">BCN</div>
+            <div class="lbox">Avalos & Asoc.</div><div class="lbox">Black S.A.</div><div class="lbox">Talleyrand</div><div class="lbox">Garibaldi</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10 · TESTIMONIOS -->
+    <section class="slide slide--center" data-title="Testimonios">
+      <div class="s-inner">
+        <h2 class="headline center anim" data-anim="1">Lo que más valoran <span class="accent">nuestros clientes</span></h2>
+        <div class="trio">
+          <article class="quote anim" data-anim="2">
+            <div class="stars">★★★★★</div>
+            <p>"El acompañamiento post-implementación y la facilidad de uso son excelentes. Es súper intuitivo y facilita la actividad diaria de RH."</p>
+            <footer><span class="av">A</span><div><strong>Adriana</strong><small>Inacon</small></div></footer>
+          </article>
+          <article class="quote anim" data-anim="3">
+            <div class="stars">★★★★★</div>
+            <p>"No hemos tenido ningún inconveniente. La plataforma es fácil de usar y el soporte siempre está dispuesto a ayudar. Recomendamos Punto Ok."</p>
+            <footer><span class="av">M</span><div><strong>Michelli</strong><small>Agrofertil</small></div></footer>
+          </article>
+          <article class="quote anim" data-anim="4">
+            <div class="stars">★★★★★</div>
+            <p>"Nuestra experiencia ha sido excelente. Información en tiempo real y un soporte 10/10 que responde ágil y efectivo."</p>
+            <footer><span class="av">M</span><div><strong>Maria</strong><small>Agroalianza SAE</small></div></footer>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 · SOPORTE -->
+    <section class="slide slide--dark slide--center" data-title="Soporte">
+      <div class="s-inner">
+        <span class="kicker center anim" data-anim="1">Acompañamiento</span>
+        <h2 class="headline center light anim" data-anim="2">Soporte e <span class="accent">Implementación</span></h2>
+        <ul class="support anim" data-anim="3">
+          <li><span>⚡</span> Implementación rápida</li>
+          <li><span>🎧</span> Soporte permanente y gratuito</li>
+          <li><span>💬</span> Whatsapp y Google Meet</li>
+          <li><span>🔄</span> Actualizaciones constantes</li>
+          <li><span>📅</span> Sin plazo mínimo de permanencia</li>
+        </ul>
+        <a href="https://wa.me/595000000000" target="_blank" rel="noopener" class="cta-btn anim" data-anim="4">Agendar una demo</a>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- NAV ARROWS -->
+  <button class="arrow arrow--prev" id="prevBtn" aria-label="Anterior">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="arrow arrow--next" id="nextBtn" aria-label="Siguiente">
+    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+
+  <!-- DOTS -->
+  <nav class="dots" id="dots" aria-label="Navegación de diapositivas"></nav>
+  <div class="counter" id="counter">1 / 11</div>
+
+  <!-- OVERVIEW (selector de páginas) -->
+  <div class="overview" id="overview" aria-hidden="true">
+    <div class="overview__head">
+      <h3>Todas las diapositivas</h3>
+      <button class="iconbtn iconbtn--dark" id="overviewClose" aria-label="Cerrar">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="overview__grid" id="overviewGrid"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
