@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="styles.css?v=33" />
 </head>
 <body>
   <!-- TOP BAR -->
@@ -17,6 +17,9 @@
       <img src="punto-ok-logo.svg" alt="Punto Ok" class="brand__logo" />
     </a>
     <div class="topbar__right">
+      <button class="iconbtn iconbtn--marker" id="markerBtn" title="Activar/desactivar marcador (M)" aria-label="Marcador" aria-pressed="false">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4L16.5 3.5z"/><path d="M14 6l4 4"/></svg>
+      </button>
       <button class="iconbtn" id="gridBtn" title="Ver todas las diapositivas (G)" aria-label="Ver todas">
         <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
       </button>
@@ -123,13 +126,13 @@
     </section>
 
     <!-- 5 · DOS FORMAS DE MARCAR -->
-    <section class="slide slide--center" data-title="Formas de marcar">
+    <section class="slide slide--center slide--soft" data-title="Formas de marcar">
       <div class="s-inner">
         <h2 class="headline center anim" data-anim="1">Una solución, <span class="accent">dos formas de marcar</span></h2>
-        <p class="lead center anim" data-anim="2">App Colaboradores y Tótem Facial según la necesidad de cada empresa.</p>
+        <p class="lead center lead--1line anim" data-anim="2">App Punto Ok! Tótem y Colaboradores según la necesidad de cada empresa.</p>
         <div class="compare">
           <article class="ccard anim" data-anim="3">
-            <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-totem.png" alt="Punto Ok Totem" /></span><div><strong>Punto Ok! Totem</strong><small>Marcación presencial</small></div></header>
+            <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-totem.png" alt="Punto Ok Totem" /></span><div><strong>Punto Ok! Tótem</strong><small>Marcación presencial</small></div><button class="app-play" data-video="video-marcacion-totem.mp4" data-title="Punto Ok! Totem" aria-label="Ver video de Punto Ok Totem"><img src="boton-play.png" alt="" /></button></header>
             <ul class="checks">
               <li>Pensada para marcación presencial</li>
               <li>Reconocimiento facial</li>
@@ -137,13 +140,14 @@
               <li>Modo offline</li>
               <li>Uso en puntos fijos de marcación</li>
             </ul>
-            <div class="ccard__store">
-              <svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#00c4ff" d="M3.6 2.4c-.3.3-.5.8-.5 1.4v16.4c0 .6.2 1.1.5 1.4l.1.1L12 13.1v-.2L3.7 2.3z"/><path fill="#ffce00" d="M15 15.8l-3-3v-.2l3-3 3.6 2c1 .6 1 1.5 0 2.1l-3.6 2.1z"/><path fill="#ff3a44" d="M15.1 15.7L12 12.6l-8.4 8.5c.4.4.9.4 1.6 0l9.9-5.4z"/><path fill="#00e574" d="M15.1 8.3L5.2 2.9c-.7-.4-1.2-.4-1.6 0L12 11.4z"/></svg>
-              <span>Disponible en Google Play</span>
+            <div class="ccard__stores">
+              <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.juliorochafilho.newpuntook&hl=es_DO">
+                <img src="boton-google-play.png" alt="Disponible en Google Play" class="store-badge__img" />
+              </a>
             </div>
           </article>
           <article class="ccard anim" data-anim="4">
-            <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-colaboradores.png" alt="Punto Ok Colaboradores" /></span><div><strong>Punto Ok! Colaboradores</strong><small>Desde el celular</small></div></header>
+            <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-colaboradores.png" alt="Punto Ok Colaboradores" /></span><div><strong>Punto Ok! Colaboradores</strong><small>Desde el celular</small></div><button class="app-play" data-video="video-marcacion-colaborado.mp4" data-title="Punto Ok! Colaboradores" aria-label="Ver video de Punto Ok Colaboradores"><img src="boton-play.png" alt="" /></button></header>
             <ul class="checks">
               <li>Pensada para el colaborador</li>
               <li>Marcación con reconocimiento facial</li>
@@ -151,9 +155,13 @@
               <li>Solicitudes en tiempo real</li>
               <li>Uso desde el celular</li>
             </ul>
-            <div class="ccard__store">
-              <svg viewBox="0 0 24 24" width="15" height="15" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path fill="#00c4ff" d="M3.6 2.4c-.3.3-.5.8-.5 1.4v16.4c0 .6.2 1.1.5 1.4l.1.1L12 13.1v-.2L3.7 2.3z"/><path fill="#ffce00" d="M15 15.8l-3-3v-.2l3-3 3.6 2c1 .6 1 1.5 0 2.1l-3.6 2.1z"/><path fill="#ff3a44" d="M15.1 15.7L12 12.6l-8.4 8.5c.4.4.9.4 1.6 0l9.9-5.4z"/><path fill="#00e574" d="M15.1 8.3L5.2 2.9c-.7-.4-1.2-.4-1.6 0L12 11.4z"/></svg>
-              <span>Disponible en Google Play</span>
+            <div class="ccard__stores">
+              <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.puntook&hl=pt">
+                <img src="boton-google-play.png" alt="Disponible en Google Play" class="store-badge__img" />
+              </a>
+              <a class="store-badge" href="https://apps.apple.com/py/app/punto-ok/id1584170241">
+                <img src="boton-app-store.png" alt="Disponible en App Store" class="store-badge__img" />
+              </a>
             </div>
           </article>
         </div>
@@ -161,32 +169,82 @@
     </section>
 
     <!-- 6 · FUNCIONALIDADES -->
-    <section class="slide slide--center" data-title="Funcionalidades">
-      <div class="s-inner">
-        <span class="kicker center anim" data-anim="1">Todo desde la app</span>
-        <h2 class="headline center anim" data-anim="2">Marcación, historial y <span class="accent">gestión en tiempo real</span></h2>
-        <div class="quad">
-          <div class="qcard anim" data-anim="3"><h4>Movimientos</h4><p>Presencia · Permiso · Enfermedades</p></div>
-          <div class="qcard anim" data-anim="4"><h4>Pagos</h4><p>Anticipo · Compras · Movilidad · Bonus · Gratificaciones · Comisiones</p></div>
-          <div class="qcard anim" data-anim="5"><h4>Vacaciones</h4><p>Solicitud y control de vacaciones</p></div>
-          <div class="qcard anim" data-anim="6"><h4>Reposos</h4><p>Gestión de reposos médicos</p></div>
+    <section class="slide slide--center" data-title="Funcionalidades" id="slideFeatures">
+      <div class="s-inner s-inner--feat">
+        <div class="feat-main">
+          <span class="kicker center anim" data-anim="1">Todo desde la app</span>
+          <h2 class="headline center anim" data-anim="2">Marcación, historial y <span class="accent">gestión en tiempo real</span></h2>
+          <div class="quad-wrap" id="featQuadWrap">
+            <div class="feat-side-backdrop" id="featSideBackdrop" aria-hidden="true"></div>
+            <div class="quad" id="featQuad">
+              <div class="qcard qcard--side anim" data-anim="3" data-side="ventana-movimiento.png" data-side-title="Movimientos" data-side-pos="left" role="button" tabindex="0" aria-expanded="false">
+                <div class="qcard__ico"><img src="movimientos.png" alt="" /></div>
+                <h4>Movimientos</h4>
+                <p>Presencia · Permiso · Enfermedades</p>
+              </div>
+              <div class="qcard qcard--side anim" data-anim="4" data-side="ventana-pago.png" data-side-title="Pagos" data-side-pos="right" role="button" tabindex="0" aria-expanded="false">
+                <div class="qcard__ico"><img src="pagos.png" alt="" /></div>
+                <h4>Pagos</h4>
+                <p>Anticipo · Compras · Movilidad · Bonus · Gratificaciones · Comisiones</p>
+              </div>
+              <div class="qcard qcard--side anim" data-anim="5" data-side="ventana-vacaciones.png" data-side-title="Vacaciones" data-side-pos="left" role="button" tabindex="0" aria-expanded="false">
+                <div class="qcard__ico"><img src="vacaciones.png" alt="" /></div>
+                <h4>Vacaciones</h4>
+                <p>Solicitud y control de vacaciones</p>
+              </div>
+              <div class="qcard anim" data-anim="6"><div class="qcard__ico"><img src="reposos.png" alt="" /></div><h4>Reposos</h4><p>Gestión de reposos médicos</p></div>
+            </div>
+            <aside class="feat-side" id="featSide" aria-hidden="true">
+              <button class="feat-side__close" id="featSideClose" aria-label="Cerrar">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+              </button>
+              <div class="feat-side__frame" id="featSideFrame" role="button" tabindex="-1" aria-label="Ampliar vista">
+                <img src="" alt="" id="featSideImg" class="feat-side__img" />
+              </div>
+            </aside>
+          </div>
+          <p class="footnote anim" data-anim="7">Historial de marcaciones · Geolocalización · Face ID</p>
         </div>
-        <p class="footnote anim" data-anim="7">Historial de marcaciones · Geolocalización · Face ID</p>
       </div>
     </section>
 
     <!-- 7 · PLATAFORMA / MODULOS -->
-    <section class="slide" data-title="Plataforma">
-      <div class="s-inner s-inner--split">
-        <div class="split-l">
-          <span class="kicker anim" data-anim="1">La plataforma</span>
-          <h2 class="headline anim" data-anim="2">Una plataforma para ordenar la <span class="accent">gestión de personas</span></h2>
-          <p class="lead anim" data-anim="3"><strong>Punto Ok</strong> ayuda a las empresas a controlar asistencias, organizar turnos, gestionar información laboral y simplificar procesos de RR.HH. desde la web y apps móviles.</p>
+    <section class="slide slide--platform" data-title="Plataforma">
+      <div class="s-inner s-inner--platform">
+        <div class="platform-grid">
+          <div class="platform-copy">
+            <span class="kicker anim" data-anim="1">La plataforma</span>
+            <h2 class="headline headline--platform anim" data-anim="2">Una plataforma<br>para ordenar la<br><span class="accent">gestión de<br>personas</span></h2>
+            <p class="lead platform-lead anim" data-anim="3"><strong>Punto Ok</strong> ayuda a las empresas a controlar asistencias, organizar turnos, gestionar información laboral y simplificar procesos de RR.HH. desde la web y apps móviles.</p>
+          </div>
+          <div class="platform-orbit anim" data-anim="4">
+          <svg class="platform-orbit__ring" viewBox="0 0 800 800" aria-hidden="true">
+            <defs>
+              <linearGradient id="platformRingGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#0071e3"/>
+                <stop offset="100%" stop-color="#00dfea"/>
+              </linearGradient>
+            </defs>
+            <circle cx="400" cy="400" r="306" fill="none" stroke="url(#platformRingGrad)" stroke-width="2.5"/>
+          </svg>
+          <div class="platform-orbit__center">
+            <img src="plataforma-web-pag4.png" alt="Plataforma web Punto Ok" class="platform-orbit__laptop" />
+          </div>
+          <div class="platform-orbit__items">
+            <span class="platform-chip" style="--i:0">Colaboradores</span>
+            <span class="platform-chip" style="--i:1">Turnos</span>
+            <span class="platform-chip" style="--i:2;--push:4px">Movimientos</span>
+            <span class="platform-chip" style="--i:3">Pagos</span>
+            <span class="platform-chip" style="--i:4;--push:8px">Planilla<br>nominal</span>
+            <span class="platform-chip" style="--i:5;--push:4px">Aguinaldo</span>
+            <span class="platform-chip" style="--i:6">Vacaciones</span>
+            <span class="platform-chip" style="--i:7;--push:8px">Liquidaciones</span>
+            <span class="platform-chip" style="--i:8;--push:10px">Libros<br>laborales</span>
+            <span class="platform-chip" style="--i:9;--push:10px">Notificaciones</span>
+            <span class="platform-chip" style="--i:10;--push:6px">Reportes</span>
+            <span class="platform-chip" style="--i:11;--push:12px">Firmas<br>electrónicas</span>
+          </div>
         </div>
-        <div class="chips anim" data-anim="4">
-          <span>Colaboradores</span><span>Turnos</span><span>Movimientos</span><span>Pagos</span>
-          <span>Planilla nominal</span><span>Aguinaldo</span><span>Vacaciones</span><span>Liquidaciones</span>
-          <span>Libros laborales</span><span>Notificaciones</span><span>Reportes</span><span>Firmas electrónicas</span>
         </div>
       </div>
     </section>
@@ -194,7 +252,11 @@
     <!-- 8 · DEMO -->
     <section class="slide slide--center slide--soft" data-title="Demo">
       <div class="s-inner">
-        <div class="play anim" data-anim="1"><div class="play__btn">▶</div></div>
+        <div class="demo-play anim" data-anim="1">
+          <a class="demo-play__btn" href="https://www.alpha.puntook.com.py/empresa-v2" target="_blank" rel="noopener noreferrer" aria-label="Abrir demo de Punto Ok">
+            <img src="boton-play.png" alt="" />
+          </a>
+        </div>
         <h2 class="headline center anim" data-anim="2">Ahora veamos cómo funciona <span class="accent">en la práctica</span></h2>
         <p class="lead center anim" data-anim="3">En la demo vamos a recorrer los puntos más importantes según la realidad de tu empresa.</p>
         <img src="punto-ok-logo.svg" alt="Punto Ok" class="demo-logo anim" data-anim="4" />
@@ -202,23 +264,56 @@
     </section>
 
     <!-- 9 · CLIENTES -->
-    <section class="slide" data-title="Clientes">
+    <section class="slide slide--clients" data-title="Clientes">
       <div class="s-inner s-inner--wide">
-        <h2 class="headline anim" data-anim="1">Empresas que ya confían en <span class="accent">Punto Ok</span></h2>
-        <div class="rubros anim" data-anim="2"><span>Industria</span><span>Comercio</span><span>Servicios</span><span>Logística</span><span>Agro</span><span>Retail</span></div>
-        <div class="clients">
-          <div class="bignum anim" data-anim="3"><b>+400</b><strong>EMPRESAS</strong><p>de distintos rubros ya confían en Punto Ok para gestionar personas, turnos y asistencias.</p></div>
-          <div class="logos anim" data-anim="4">
-            <div class="lbox">Agrofértil</div><div class="lbox">AgroAlianza</div><div class="lbox">JS Comercial</div><div class="lbox">Inacon</div>
-            <div class="lbox">SiderAgro</div><div class="lbox">UPE</div><div class="lbox">Mora Cué</div><div class="lbox">BCN</div>
-            <div class="lbox">Avalos & Asoc.</div><div class="lbox">Black S.A.</div><div class="lbox">Talleyrand</div><div class="lbox">Garibaldi</div>
+        <div class="clients-wrap">
+          <p class="kicker anim" data-anim="1">Clientes</p>
+          <h2 class="headline anim" data-anim="2">Empresas que ya confían en <span class="accent">Punto Ok</span></h2>
+          <div class="clients-header anim" data-anim="3">
+            <div class="clients-header__spacer" aria-hidden="true"></div>
+            <div class="rubros"><span>Industria</span><span>Comercio</span><span>Servicios</span><span>Logística</span><span>Agro</span><span>Retail</span></div>
+          </div>
+          <div class="clients anim" data-anim="4">
+            <div class="bignum">
+              <img class="bignum__img" src="+400-empresas.png" alt="+400 empresas confían en Punto Ok" />
+            </div>
+            <div class="logos-shell">
+              <div class="logos-viewport" tabindex="0" aria-label="Logos de clientes, arrastrá horizontalmente para ver más">
+                <div class="logos-track">
+                  <div class="lbox"><img src="logos/agrofertil.png" alt="Agrofértil" /></div>
+                  <div class="lbox"><img src="logos/agroalianza.png" alt="AgroAlianza" /></div>
+                  <div class="lbox"><img src="logos/js-comercial.png" alt="JS Comercial" /></div>
+                  <div class="lbox"><img src="logos/inacon.png" alt="Inacon" /></div>
+                  <div class="lbox"><img src="logos/sideagro.png" alt="SiderAgro" /></div>
+                  <div class="lbox"><img src="logos/upe.png" alt="UPE" /></div>
+                  <div class="lbox"><img src="logos/moracue.png" alt="Mora Cué" /></div>
+                  <div class="lbox"><img src="logos/BCN.png" alt="BCN" /></div>
+                  <div class="lbox"><img src="logos/avalos-y-asociados.png" alt="Avalos &amp; Asoc." /></div>
+                  <div class="lbox"><img src="logos/black-sa.png" alt="Black S.A." /></div>
+                  <div class="lbox"><img src="logos/talleyrand.png" alt="Talleyrand" /></div>
+                  <div class="lbox"><img src="logos/GARIBALDI.png" alt="Garibaldi" /></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                  <div class="lbox lbox--placeholder"><span>Agregar logo</span></div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
     <!-- 10 · TESTIMONIOS -->
-    <section class="slide slide--center" data-title="Testimonios">
+    <section class="slide slide--center slide--testimonials" data-title="Testimonios">
       <div class="s-inner">
         <h2 class="headline center anim" data-anim="1">Lo que más valoran <span class="accent">nuestros clientes</span></h2>
         <div class="trio">
@@ -242,7 +337,7 @@
     </section>
 
     <!-- 11 · SOPORTE -->
-    <section class="slide slide--dark slide--center" data-title="Soporte">
+    <section class="slide slide--dark slide--center slide--support" data-title="Soporte">
       <div class="s-inner">
         <span class="kicker center anim" data-anim="1">Acompañamiento</span>
         <h2 class="headline center light anim" data-anim="2">Soporte e <span class="accent">Implementación</span></h2>
@@ -282,6 +377,36 @@
     <div class="overview__grid" id="overviewGrid"></div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- MODAL DE VIDEO -->
+  <div class="vmodal" id="vmodal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="vmodal__box">
+      <div class="vmodal__bar">
+        <span class="vmodal__title" id="vmodalTitle"></span>
+        <button class="vmodal__close" id="vmodalClose" aria-label="Cerrar video">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <video id="vmodalVideo" controls playsinline loop preload="metadata"></video>
+    </div>
+  </div>
+
+  <!-- MODAL DE TIENDA -->
+  <div class="smodal" id="smodal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="smodal__box">
+      <div class="smodal__bar">
+        <span class="smodal__title" id="smodalTitle"></span>
+        <button class="smodal__close" id="smodalClose" aria-label="Cerrar tienda">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+        </button>
+      </div>
+      <div class="smodal__panel">
+        <img id="smodalBadge" class="smodal__badge" alt="" />
+        <p class="smodal__hint" id="smodalHint">La tienda se abrió en una ventana emergente.</p>
+        <button type="button" class="smodal__reopen" id="smodalReopen">Volver a abrir tienda</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js?v=17"></script>
 </body>
 </html>
