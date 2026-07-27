@@ -14,6 +14,7 @@
   const progressBar = document.getElementById("progressBar");
   const overview = document.getElementById("overview");
   const overviewGrid = document.getElementById("overviewGrid");
+  const markSlide = document.getElementById("slideMark");
 
   // Build dots
   slides.forEach((s, i) => {
@@ -55,6 +56,9 @@
     if (typeof closeFeatSide === "function" && featSlide && slides[current] !== featSlide && featSlide.classList.contains("has-feat-side")) {
       closeFeatSide();
     }
+    if (typeof closeAllMarkSides === "function" && markSlide && slides[current] !== markSlide && markSlide.classList.contains("has-mark-side")) {
+      closeAllMarkSides(true, true);
+    }
   }
 
   function goTo(i) {
@@ -83,6 +87,10 @@
     if (featSlide && featSlide.classList.contains("has-feat-side") && e.key === "Escape") {
       if (featSideFrame.classList.contains("is-zoomed")) resetFeatSideZoom();
       else closeFeatSide();
+      return;
+    }
+    if (typeof closeAllMarkSides === "function" && markSlide?.classList.contains("has-mark-side") && e.key === "Escape") {
+      closeAllMarkSides();
       return;
     }
     if (overview.classList.contains("is-open")) {
@@ -118,7 +126,7 @@
     setTimeout(() => (wheelLock = false), 700);
   }, { passive: true });
 
-  // Logo strip: scroll con máscara de borde (sin overlays)
+  // Logo strip: scroll con m?scara de borde (sin overlays)
   document.querySelectorAll(".clients").forEach((clients) => {
     const shell = clients.querySelector(".logos-shell");
     const viewport = clients.querySelector(".logos-viewport");
@@ -204,7 +212,7 @@
     el.addEventListener("click", (e) => { e.preventDefault(); goTo(parseInt(el.dataset.goto, 10)); })
   );
 
-  // Acordeón expandible (tarjetas con dispositivo)
+  // Acorde?n expandible (tarjetas con dispositivo)
   const expandTiles = Array.from(document.querySelectorAll(".tile--expand"));
   let closeTimer = null;
   function closeTile(t) { t.classList.remove("is-open"); t.setAttribute("aria-expanded", "false"); }
@@ -235,34 +243,124 @@
     });
   });
 
-  // Modal de video (página 5)
+  // Panel lateral por tarjeta (p?gina 5 ? varios videos abiertos a la vez)
+  const markSideBackdrop = document.getElementById("markSideBackdrop");
+  const markVideoCards = markSlide ? Array.from(markSlide.querySelectorAll(".ccard--video")) : [];
+  const MARK_SIDE_MS = 520;
+  const markSideTimers = new WeakMap();
+
+  function syncMarkSlideState() {
+    if (!markSlide) return;
+    const anyOpen = markVideoCards.some(
+      (c) => c.classList.contains("is-mark-open") || c.classList.contains("is-video-active")
+    );
+    markSlide.classList.toggle("has-mark-side", anyOpen);
+    markSideBackdrop?.setAttribute("aria-hidden", anyOpen ? "false" : "true");
+  }
+
+  function closeMarkCard(card, clearVideo = true, immediate = false, onClosed) {
+    if (!card) return;
+    const panel = card.querySelector(".mark-side");
+    const video = card.querySelector(".mark-side video");
+    const prevTimer = markSideTimers.get(card);
+    if (prevTimer) clearTimeout(prevTimer);
+
+    card.classList.remove("is-mark-open");
+    panel?.setAttribute("aria-hidden", "true");
+    video?.pause();
+    syncMarkSlideState();
+
+    const finish = () => {
+      if (!card.classList.contains("is-mark-open")) {
+        card.classList.remove("is-video-active");
+        if (clearVideo && video) {
+          video.pause();
+          video.removeAttribute("src");
+          video.load();
+        }
+      }
+      markSideTimers.delete(card);
+      syncMarkSlideState();
+      onClosed?.();
+    };
+
+    if (immediate) {
+      finish();
+      return;
+    }
+    markSideTimers.set(card, setTimeout(finish, MARK_SIDE_MS));
+  }
+
+  function closeAllMarkSides(clearVideo = true, immediate = false) {
+    markVideoCards.forEach((card) => closeMarkCard(card, clearVideo, immediate));
+  }
+
+  function openMarkCard(btn) {
+    const card = btn.closest(".ccard--video");
+    const src = btn.dataset.video || "";
+    const panel = card?.querySelector(".mark-side");
+    const video = panel?.querySelector("video");
+    if (!card || !src || !video || !markSlide) return;
+
+    if (card.classList.contains("is-mark-open")) {
+      closeMarkCard(card);
+      return;
+    }
+
+    card.classList.add("is-video-active");
+    video.src = src;
+    video.muted = /totem/i.test(src);
+    panel.setAttribute("aria-hidden", "false");
+    syncMarkSlideState();
+    requestAnimationFrame(() => card.classList.add("is-mark-open"));
+    video.currentTime = 0;
+    video.play().catch(() => {});
+  }
+
+  markVideoCards.forEach((card) => {
+    card.querySelector(".mark-side__close")?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeMarkCard(card);
+    });
+  });
+  markSideBackdrop?.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closeAllMarkSides();
+  });
+
+  // Modal de video (reserva)
   const vmodal = document.getElementById("vmodal");
   const vmodalVideo = document.getElementById("vmodalVideo");
   const vmodalTitle = document.getElementById("vmodalTitle");
-  function openVideo(src, title) {
+  function openVideoModal(src, title) {
     vmodalVideo.src = src;
     vmodalTitle.textContent = title || "";
-    // El video del Totem se reproduce sin audio
     vmodalVideo.muted = /totem/i.test(src);
     vmodal.classList.add("is-open");
     vmodal.setAttribute("aria-hidden", "false");
     vmodalVideo.currentTime = 0;
     vmodalVideo.play().catch(() => {});
   }
-  function closeVideo() {
+  function closeVideoModal() {
     vmodal.classList.remove("is-open");
     vmodal.setAttribute("aria-hidden", "true");
     vmodalVideo.pause();
-    setTimeout(() => { if (!vmodal.classList.contains("is-open")) vmodalVideo.removeAttribute("src"), vmodalVideo.load(); }, 300);
+    setTimeout(() => {
+      if (!vmodal.classList.contains("is-open")) {
+        vmodalVideo.removeAttribute("src");
+        vmodalVideo.load();
+      }
+    }, 300);
   }
   document.querySelectorAll(".app-play").forEach((btn) =>
     btn.addEventListener("click", (e) => {
       e.stopPropagation();
-      openVideo(btn.dataset.video, btn.dataset.title);
+      if (btn.closest(".ccard--video")) openMarkCard(btn);
+      else openVideoModal(btn.dataset.video, btn.dataset.title);
     })
   );
-  document.getElementById("vmodalClose").addEventListener("click", closeVideo);
-  vmodal.addEventListener("click", (e) => { if (e.target === vmodal) closeVideo(); });
+  document.getElementById("vmodalClose").addEventListener("click", closeVideoModal);
+  vmodal.addEventListener("click", (e) => { if (e.target === vmodal) closeVideoModal(); });
 
   // Modal de tienda (Google Play / App Store)
   const smodal = document.getElementById("smodal");
@@ -296,10 +394,10 @@
     smodal.setAttribute("aria-hidden", "false");
     storePopup = launchStorePopup(url);
     if (storePopup) {
-      smodalHint.textContent = "La tienda se abrió en una ventana emergente 16:9. Cerrá acá cuando termines.";
+      smodalHint.textContent = "La tienda se abri? en una ventana emergente 16:9. Cerr? ac? cuando termines.";
       watchStorePopup();
     } else {
-      smodalHint.textContent = "El navegador bloqueó la ventana emergente. Usá el botón para abrirla.";
+      smodalHint.textContent = "El navegador bloque? la ventana emergente. Us? el bot?n para abrirla.";
     }
   }
   function closeStore() {
@@ -329,7 +427,7 @@
   document.getElementById("smodalClose").addEventListener("click", closeStore);
   smodal.addEventListener("click", (e) => { if (e.target === smodal) closeStore(); });
 
-  // Panel lateral de funcionalidades (página 6)
+  // Panel lateral de funcionalidades (p?gina 6)
   const featSlide = document.getElementById("slideFeatures");
   const featSide = document.getElementById("featSide");
   const featSideBackdrop = document.getElementById("featSideBackdrop");
@@ -372,7 +470,7 @@
       featPan = clampFeatPan(0, 0);
       applyFeatPan();
       featSideFrame.classList.add("is-zoomed");
-      featSideFrame.setAttribute("aria-label", "Arrastrá para mover · click para reducir");
+      featSideFrame.setAttribute("aria-label", "Arrastr? para mover ? click para reducir");
     } else {
       resetFeatSideZoom();
       return;
@@ -567,7 +665,7 @@
   }
   window.addEventListener("pointerdown", (e) => {
     if (!markerOn) return;
-    if (e.target.closest("button, a, .app-play, .vmodal, .smodal, .overview, .feat-side, .feat-side-backdrop, .qcard--side, input, video")) return;
+    if (e.target.closest("button, a, .app-play, .vmodal, .smodal, .overview, .feat-side, .feat-side-backdrop, .mark-side-backdrop, .mark-side, .qcard--side, input, video")) return;
     startStroke(e.clientX, e.clientY);
   });
   window.addEventListener("pointermove", (e) => extendStroke(e.clientX, e.clientY));
@@ -584,7 +682,7 @@
   // Keep transform correct on resize (vw based, so just re-render)
   window.addEventListener("resize", () => render());
 
-  // Posicionamiento inicial sin animación (para restaurar la diapositiva guardada)
+  // Posicionamiento inicial sin animaci?n (para restaurar la diapositiva guardada)
   const prevTransition = deck.style.transition;
   deck.style.transition = "none";
   render();

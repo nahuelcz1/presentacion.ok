@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=33" />
+  <link rel="stylesheet" href="styles.css?v=49" />
 </head>
 <body>
   <!-- TOP BAR -->
@@ -126,44 +126,63 @@
     </section>
 
     <!-- 5 · DOS FORMAS DE MARCAR -->
-    <section class="slide slide--center slide--soft" data-title="Formas de marcar">
+    <section class="slide slide--center slide--soft" data-title="Formas de marcar" id="slideMark">
       <div class="s-inner">
         <h2 class="headline center anim" data-anim="1">Una solución, <span class="accent">dos formas de marcar</span></h2>
         <p class="lead center lead--1line anim" data-anim="2">App Punto Ok! Tótem y Colaboradores según la necesidad de cada empresa.</p>
-        <div class="compare">
-          <article class="ccard anim" data-anim="3">
-            <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-totem.png" alt="Punto Ok Totem" /></span><div><strong>Punto Ok! Tótem</strong><small>Marcación presencial</small></div><button class="app-play" data-video="video-marcacion-totem.mp4" data-title="Punto Ok! Totem" aria-label="Ver video de Punto Ok Totem"><img src="boton-play.png" alt="" /></button></header>
-            <ul class="checks">
-              <li>Pensada para marcación presencial</li>
-              <li>Reconocimiento facial</li>
-              <li>Sin toque</li>
-              <li>Modo offline</li>
-              <li>Uso en puntos fijos de marcación</li>
-            </ul>
-            <div class="ccard__stores">
-              <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.juliorochafilho.newpuntook&hl=es_DO">
-                <img src="boton-google-play.png" alt="Disponible en Google Play" class="store-badge__img" />
-              </a>
-            </div>
-          </article>
-          <article class="ccard anim" data-anim="4">
-            <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-colaboradores.png" alt="Punto Ok Colaboradores" /></span><div><strong>Punto Ok! Colaboradores</strong><small>Desde el celular</small></div><button class="app-play" data-video="video-marcacion-colaborado.mp4" data-title="Punto Ok! Colaboradores" aria-label="Ver video de Punto Ok Colaboradores"><img src="boton-play.png" alt="" /></button></header>
-            <ul class="checks">
-              <li>Pensada para el colaborador</li>
-              <li>Marcación con reconocimiento facial</li>
-              <li>Geolocalización</li>
-              <li>Solicitudes en tiempo real</li>
-              <li>Uso desde el celular</li>
-            </ul>
-            <div class="ccard__stores">
-              <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.puntook&hl=pt">
-                <img src="boton-google-play.png" alt="Disponible en Google Play" class="store-badge__img" />
-              </a>
-              <a class="store-badge" href="https://apps.apple.com/py/app/punto-ok/id1584170241">
-                <img src="boton-app-store.png" alt="Disponible en App Store" class="store-badge__img" />
-              </a>
-            </div>
-          </article>
+        <div class="compare-wrap" id="compareWrap">
+          <div class="mark-side-backdrop" id="markSideBackdrop" aria-hidden="true"></div>
+          <div class="compare">
+            <article class="ccard ccard--video anim" data-anim="3" data-video-side="left">
+              <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-totem.png" alt="Punto Ok Totem" /></span><div><strong>Punto Ok! Tótem</strong><small>Marcación presencial</small></div><button type="button" class="app-play" data-video="video-marcacion-totem.mp4" data-title="Punto Ok! Totem" aria-label="Ver video de Punto Ok Totem"><img src="boton-play.png" alt="" /></button></header>
+              <ul class="checks">
+                <li>Pensada para marcación presencial</li>
+                <li>Reconocimiento facial</li>
+                <li>Sin toque</li>
+                <li>Modo offline</li>
+                <li>Uso en puntos fijos de marcación</li>
+              </ul>
+              <div class="ccard__stores">
+                <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.juliorochafilho.newpuntook&hl=es_DO">
+                  <img src="boton-google-play.png" alt="Disponible en Google Play" class="store-badge__img" />
+                </a>
+              </div>
+              <aside class="mark-side" aria-hidden="true">
+                <button type="button" class="mark-side__close" aria-label="Cerrar video de Punto Ok Totem">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                </button>
+                <div class="mark-side__frame">
+                  <video playsinline loop controls preload="metadata"></video>
+                </div>
+              </aside>
+            </article>
+            <article class="ccard ccard--video anim" data-anim="4" data-video-side="right">
+              <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-colaboradores.png" alt="Punto Ok Colaboradores" /></span><div><strong>Punto Ok! Colaboradores</strong><small>Desde el celular</small></div><button type="button" class="app-play" data-video="video-marcacion-colaborado.mp4" data-title="Punto Ok! Colaboradores" aria-label="Ver video de Punto Ok Colaboradores"><img src="boton-play.png" alt="" /></button></header>
+              <ul class="checks">
+                <li>Pensada para el colaborador</li>
+                <li>Marcación con reconocimiento facial</li>
+                <li>Geolocalización</li>
+                <li>Solicitudes en tiempo real</li>
+                <li>Uso desde el celular</li>
+              </ul>
+              <div class="ccard__stores">
+                <a class="store-badge" href="https://play.google.com/store/apps/details?id=com.puntook&hl=pt">
+                  <img src="boton-google-play.png" alt="Disponible en Google Play" class="store-badge__img" />
+                </a>
+                <a class="store-badge" href="https://apps.apple.com/py/app/punto-ok/id1584170241">
+                  <img src="boton-app-store.png" alt="Disponible en App Store" class="store-badge__img" />
+                </a>
+              </div>
+              <aside class="mark-side" aria-hidden="true">
+                <button type="button" class="mark-side__close" aria-label="Cerrar video de Punto Ok Colaboradores">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6L6 18"/></svg>
+                </button>
+                <div class="mark-side__frame">
+                  <video playsinline loop controls preload="metadata"></video>
+                </div>
+              </aside>
+            </article>
+          </div>
         </div>
       </div>
     </section>
@@ -231,18 +250,19 @@
             <img src="plataforma-web-pag4.png" alt="Plataforma web Punto Ok" class="platform-orbit__laptop" />
           </div>
           <div class="platform-orbit__items">
-            <span class="platform-chip" style="--i:0">Colaboradores</span>
-            <span class="platform-chip" style="--i:1">Turnos</span>
-            <span class="platform-chip" style="--i:2;--push:4px">Movimientos</span>
-            <span class="platform-chip" style="--i:3">Pagos</span>
-            <span class="platform-chip" style="--i:4;--push:8px">Planilla<br>nominal</span>
-            <span class="platform-chip" style="--i:5;--push:4px">Aguinaldo</span>
-            <span class="platform-chip" style="--i:6">Vacaciones</span>
-            <span class="platform-chip" style="--i:7;--push:8px">Liquidaciones</span>
-            <span class="platform-chip" style="--i:8;--push:10px">Libros<br>laborales</span>
-            <span class="platform-chip" style="--i:9;--push:10px">Notificaciones</span>
-            <span class="platform-chip" style="--i:10;--push:6px">Reportes</span>
-            <span class="platform-chip" style="--i:11;--push:12px">Firmas<br>electrónicas</span>
+            <!-- Horario: Colaboradores (9h) → Turnos → Movimientos → Pagos (12h) → … -->
+            <span class="platform-chip" style="--i:0">Vacaciones</span>
+            <span class="platform-chip" style="--i:1">Liquidaciones</span>
+            <span class="platform-chip" style="--i:2;--push:4px">Libros<br>laborales</span>
+            <span class="platform-chip" style="--i:3">Notificaciones</span>
+            <span class="platform-chip" style="--i:4;--push:8px">Reportes</span>
+            <span class="platform-chip" style="--i:5;--push:4px">Firmas<br>electrónicas</span>
+            <span class="platform-chip" style="--i:6">Colaboradores</span>
+            <span class="platform-chip" style="--i:7;--push:8px">Turnos</span>
+            <span class="platform-chip" style="--i:8;--push:10px">Movimientos</span>
+            <span class="platform-chip" style="--i:9;--push:10px">Pagos</span>
+            <span class="platform-chip" style="--i:10;--push:6px">Planilla<br>nominal</span>
+            <span class="platform-chip" style="--i:11;--push:12px">Aguinaldo</span>
           </div>
         </div>
         </div>
@@ -275,7 +295,7 @@
           </div>
           <div class="clients anim" data-anim="4">
             <div class="bignum">
-              <img class="bignum__img" src="+400-empresas.png" alt="+400 empresas confían en Punto Ok" />
+              <img class="bignum__img" src="400empresas2.png" alt="+400 empresas confían en Punto Ok" />
             </div>
             <div class="logos-shell">
               <div class="logos-viewport" tabindex="0" aria-label="Logos de clientes, arrastrá horizontalmente para ver más">
@@ -407,6 +427,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=17"></script>
+  <script src="script.js?v=25"></script>
 </body>
 </html>
