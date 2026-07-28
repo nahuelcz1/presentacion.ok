@@ -903,6 +903,26 @@ body.marker-on button, body.marker-on a, body.marker-on .app-play, body.marker-o
 /* Soporte · slide 11 */
 .slide--support {
   background: radial-gradient(140% 140% at 50% 16%, #181a20 0%, #0a0a0c 58%, #000 100%);
+  isolation: isolate;
+}
+.slide--support .support-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+.slide--support .support-bg__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.1;
+  display: block;
+}
+.slide--support .s-inner {
+  position: relative;
+  z-index: 1;
 }
 .slide--support .support {
   list-style: none;

@@ -2,10 +2,7 @@
   const deck = document.getElementById("deck");
   const slides = Array.from(deck.querySelectorAll(".slide"));
   const total = slides.length;
-  const STORAGE_KEY = "puntook_slide";
   let current = 0;
-  const saved = parseInt(localStorage.getItem(STORAGE_KEY), 10);
-  if (!Number.isNaN(saved) && saved >= 0 && saved < total) current = saved;
 
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
@@ -15,6 +12,8 @@
   const overview = document.getElementById("overview");
   const overviewGrid = document.getElementById("overviewGrid");
   const markSlide = document.getElementById("slideMark");
+  const supportSlide = document.getElementById("slideSupport");
+  const supportBgVideo = document.getElementById("supportBgVideo");
 
   // Build dots
   slides.forEach((s, i) => {
@@ -59,11 +58,25 @@
     if (typeof closeAllMarkSides === "function" && markSlide && slides[current] !== markSlide && markSlide.classList.contains("has-mark-side")) {
       closeAllMarkSides(true, true);
     }
+    syncSupportBgVideo();
+  }
+
+  function syncSupportBgVideo() {
+    if (!supportBgVideo || !supportSlide) return;
+    const active = slides[current] === supportSlide;
+    if (active) {
+      if (supportBgVideo.readyState >= 2) supportBgVideo.play().catch(() => {});
+      else {
+        supportBgVideo.addEventListener("loadeddata", () => supportBgVideo.play().catch(() => {}), { once: true });
+        supportBgVideo.load();
+      }
+    } else {
+      supportBgVideo.pause();
+    }
   }
 
   function goTo(i) {
     current = Math.max(0, Math.min(total - 1, i));
-    try { localStorage.setItem(STORAGE_KEY, String(current)); } catch (e) {}
     render();
   }
   const next = () => goTo(current + 1);
@@ -212,29 +225,24 @@
     el.addEventListener("click", (e) => { e.preventDefault(); goTo(parseInt(el.dataset.goto, 10)); })
   );
 
-  // Acorde?n expandible (tarjetas con dispositivo)
+  // Acordeón expandible (página 4 — varias tarjetas abiertas a la vez)
   const expandTiles = Array.from(document.querySelectorAll(".tile--expand"));
-  let closeTimer = null;
   function closeTile(t) { t.classList.remove("is-open"); t.setAttribute("aria-expanded", "false"); }
+  function updateExpandSlideState(slide) {
+    if (!slide) return;
+    const anyOpen = expandTiles.some((t) => slide.contains(t) && t.classList.contains("is-open"));
+    slide.classList.toggle("has-open", anyOpen);
+  }
   function toggleTile(tile) {
     const slide = tile.closest(".slide");
     const willOpen = !tile.classList.contains("is-open");
-    clearTimeout(closeTimer);
-
     if (willOpen) {
-      const others = expandTiles.filter((t) => t !== tile && t.classList.contains("is-open"));
-      // Abrir la nueva de inmediato
       tile.classList.add("is-open");
       tile.setAttribute("aria-expanded", "true");
-      if (slide) slide.classList.add("has-open");
-      // Mantener la anterior abierta hasta que la nueva termine de expandirse (evita el "salto")
-      if (others.length) {
-        closeTimer = setTimeout(() => others.forEach(closeTile), 620);
-      }
     } else {
       closeTile(tile);
-      if (slide) slide.classList.remove("has-open");
     }
+    updateExpandSlideState(slide);
   }
   expandTiles.forEach((tile) => {
     tile.addEventListener("click", () => toggleTile(tile));

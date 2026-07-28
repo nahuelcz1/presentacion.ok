@@ -8,7 +8,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=51" />
+  <link rel="stylesheet" href="styles.css?v=52" />
 </head>
 <body>
   <!-- TOP BAR -->
@@ -357,7 +357,10 @@
     </section>
 
     <!-- 11 · SOPORTE -->
-    <section class="slide slide--dark slide--center slide--support" data-title="Soporte">
+    <section class="slide slide--dark slide--center slide--support" data-title="Soporte" id="slideSupport">
+      <div class="support-bg" aria-hidden="true">
+        <video class="support-bg__video" id="supportBgVideo" src="video-bg-pag11.mp4" playsinline muted loop preload="metadata"></video>
+      </div>
       <div class="s-inner">
         <span class="kicker center anim" data-anim="1">Acompañamiento</span>
         <h2 class="headline center light anim" data-anim="2">Soporte e <span class="accent">Implementación</span></h2>
@@ -426,6 +429,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=25"></script>
+  <script src="script.js?v=28"></script>
 </body>
 </html>
