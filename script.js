@@ -2,18 +2,64 @@
   const deck = document.getElementById("deck");
   const slides = Array.from(deck.querySelectorAll(".slide"));
   const total = slides.length;
-  let current = 0;
+  const SLIDE_STORE_KEY = "puntook-presentacion-slide";
+
+  function clampSlideIndex(i) {
+    return Math.max(0, Math.min(total - 1, i));
+  }
+
+  function parseSlideIndexFromHash() {
+    const h = location.hash.replace(/^#/, "").trim();
+    if (!h) return null;
+    const m = h.match(/^(?:slide[-=])?(\d+)$/i);
+    if (!m) return null;
+    const n = parseInt(m[1], 10);
+    if (!Number.isFinite(n) || n < 1) return null;
+    return n - 1;
+  }
+
+  function loadSavedSlideIndex() {
+    const fromHash = parseSlideIndexFromHash();
+    if (fromHash !== null) return clampSlideIndex(fromHash);
+    try {
+      const raw = localStorage.getItem(SLIDE_STORE_KEY);
+      if (raw === null) return 0;
+      const n = parseInt(raw, 10);
+      if (!Number.isFinite(n)) return 0;
+      return clampSlideIndex(n);
+    } catch {
+      return 0;
+    }
+  }
+
+  function persistSlideIndex() {
+    try {
+      localStorage.setItem(SLIDE_STORE_KEY, String(current));
+    } catch (_) { /* private mode / blocked storage */ }
+    const hash = "#" + (current + 1);
+    if (location.hash !== hash) history.replaceState(null, "", hash);
+  }
+
+  let current = loadSavedSlideIndex();
 
   const prevBtn = document.getElementById("prevBtn");
   const nextBtn = document.getElementById("nextBtn");
   const dotsWrap = document.getElementById("dots");
   const counter = document.getElementById("counter");
   const progressBar = document.getElementById("progressBar");
+  const progressEl = document.getElementById("progress");
+  const slideStatus = document.getElementById("slideStatus");
   const overview = document.getElementById("overview");
   const overviewGrid = document.getElementById("overviewGrid");
   const markSlide = document.getElementById("slideMark");
+  const impactSlide = document.getElementById("slideImpact");
+  const impactWrap = document.getElementById("impactWrap");
+  const impactLinkPath = document.getElementById("impactLinkPath");
+  const impactCards = impactSlide ? Array.from(impactSlide.querySelectorAll(".impact-card")) : [];
   const supportSlide = document.getElementById("slideSupport");
   const supportBgVideo = document.getElementById("supportBgVideo");
+  const heroSlide = deck.querySelector(".slide--hero");
+  let heroIntroSeen = false;
 
   // Build dots
   slides.forEach((s, i) => {
@@ -42,13 +88,39 @@
   });
   const thumbs = Array.from(overviewGrid.children);
 
+  slides.forEach((s, i) => {
+    s.setAttribute("aria-roledescription", "diapositiva");
+    if (!s.getAttribute("aria-label")) {
+      s.setAttribute("aria-label", s.dataset.title || "Diapositiva " + (i + 1));
+    }
+  });
+  if (progressEl) progressEl.setAttribute("aria-valuemax", String(total));
+
   function render(options) {
     deck.style.transform = "translateX(" + -current * 100 + "vw)";
-    slides.forEach((s, i) => s.classList.toggle("is-active", i === current));
+    slides.forEach((s, i) => {
+      const active = i === current;
+      s.classList.toggle("is-active", active);
+      if (active) {
+        s.removeAttribute("inert");
+        s.removeAttribute("aria-hidden");
+      } else {
+        s.setAttribute("inert", "");
+        s.setAttribute("aria-hidden", "true");
+      }
+    });
     dots.forEach((d, i) => d.classList.toggle("is-active", i === current));
     thumbs.forEach((t, i) => t.classList.toggle("is-current", i === current));
     counter.textContent = current + 1 + " / " + total;
     progressBar.style.width = ((current + 1) / total) * 100 + "%";
+    if (progressEl) {
+      progressEl.setAttribute("aria-valuenow", String(current + 1));
+      progressEl.setAttribute("aria-valuetext", "Diapositiva " + (current + 1) + " de " + total);
+    }
+    if (slideStatus) {
+      const title = slides[current].dataset.title || "";
+      slideStatus.textContent = "Diapositiva " + (current + 1) + " de " + total + (title ? ": " + title : "");
+    }
     prevBtn.disabled = current === 0;
     nextBtn.disabled = current === total - 1;
     document.body.classList.toggle("on-dark", slides[current].classList.contains("slide--dark"));
@@ -58,7 +130,30 @@
     if (typeof closeAllMarkSides === "function" && markSlide && slides[current] !== markSlide && markSlide.classList.contains("has-mark-side")) {
       closeAllMarkSides(true, true);
     }
+    if (impactSlide && slides[current] !== impactSlide && impactSlide.classList.contains("is-impact-linked")) {
+      resetImpactLink();
+    }
+    if (ecoSlide && slides[current] !== ecoSlide) {
+      resetEcoSlide();
+    }
+    if (testimonialsSlide && slides[current] !== testimonialsSlide) {
+      testimonialsTrio?.closest(".testimonials-marquee")?.removeAttribute("data-marquee-primed");
+    }
+    if (typeof window.syncTestimonialsCarousel === "function") {
+      window.syncTestimonialsCarousel();
+    }
     syncSupportBgVideo();
+    syncHeroIntro();
+  }
+
+  function syncHeroIntro() {
+    if (!heroSlide) return;
+    const onHero = slides[current] === heroSlide;
+    if (onHero) {
+      heroIntroSeen = true;
+      return;
+    }
+    if (heroIntroSeen) heroSlide.classList.add("hero-intro-complete");
   }
 
   function syncSupportBgVideo() {
@@ -76,7 +171,8 @@
   }
 
   function goTo(i) {
-    current = Math.max(0, Math.min(total - 1, i));
+    current = clampSlideIndex(i);
+    persistSlideIndex();
     render();
   }
   const next = () => goTo(current + 1);
@@ -84,6 +180,16 @@
 
   prevBtn.addEventListener("click", prev);
   nextBtn.addEventListener("click", next);
+
+  window.addEventListener("hashchange", () => {
+    const fromHash = parseSlideIndexFromHash();
+    if (fromHash === null) return;
+    const idx = clampSlideIndex(fromHash);
+    if (idx !== current) {
+      current = idx;
+      render();
+    }
+  });
 
   // Keyboard
   document.addEventListener("keydown", (e) => {
@@ -139,50 +245,124 @@
     setTimeout(() => (wheelLock = false), 700);
   }, { passive: true });
 
-  // Logo strip: scroll con m?scara de borde (sin overlays)
+  // Logo strip: scroll, arrastre y auto-desplazamiento infinito
+  const clientsSlide = document.querySelector(".slide--clients");
+  const logosAutoTickers = [];
+
+  function logosMotionOk() {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      return document.documentElement.classList.contains("allow-motion");
+    }
+    return true;
+  }
+
   document.querySelectorAll(".clients").forEach((clients) => {
     const shell = clients.querySelector(".logos-shell");
     const viewport = clients.querySelector(".logos-viewport");
-    if (!shell || !viewport) return;
+    const track = clients.querySelector(".logos-track");
+    if (!shell || !viewport || !track) return;
 
     let isDragging = false;
+    let pointerDown = false;
+    let dragPointerId = null;
     let dragStartX = 0;
     let dragStartScroll = 0;
+    let loopHalf = 0;
+    let autoCarry = 0;
+    let lastAutoTs = 0;
+    const AUTO_SCROLL_SPEED = 24; // px/s (~un poco más lento que antes)
+
+    function canAutoScroll() {
+      measureLoopHalf();
+      const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+      return maxScroll > 8 && loopHalf > 8;
+    }
+
+    function ensureLogosLoop() {
+      if (track.dataset.loopReady === "1") return;
+      const boxes = Array.from(track.querySelectorAll(":scope > .lbox:not(.lbox--clone)"));
+      boxes.forEach((box) => {
+        const clone = box.cloneNode(true);
+        clone.classList.add("lbox--clone");
+        clone.setAttribute("aria-hidden", "true");
+        track.appendChild(clone);
+      });
+      track.dataset.loopReady = "1";
+    }
+
+    function measureLoopHalf() {
+      ensureLogosLoop();
+      loopHalf = track.scrollWidth / 2;
+      return loopHalf;
+    }
+
+    function wrapScroll() {
+      if (loopHalf <= 0) return;
+      while (viewport.scrollLeft >= loopHalf) viewport.scrollLeft -= loopHalf;
+      while (viewport.scrollLeft < 0) viewport.scrollLeft += loopHalf;
+    }
 
     const updateFades = () => {
+      measureLoopHalf();
       const maxScroll = viewport.scrollWidth - viewport.clientWidth;
+      const infinite = loopHalf > 6 && maxScroll > 6;
+      shell.classList.toggle("logos-loop-active", infinite);
+      if (infinite) {
+        shell.classList.add("can-scroll-left", "can-scroll-right");
+        return;
+      }
+      shell.classList.remove("logos-loop-active");
       shell.classList.toggle("can-scroll-left", viewport.scrollLeft > 6);
-      shell.classList.toggle("can-scroll-right", maxScroll > 6 && viewport.scrollLeft < maxScroll - 6);
+      shell.classList.toggle(
+        "can-scroll-right",
+        maxScroll > 6 && viewport.scrollLeft < maxScroll - 6
+      );
     };
 
     const endDrag = (e) => {
-      if (!isDragging) return;
+      if (!pointerDown && !isDragging) return;
+      pointerDown = false;
       isDragging = false;
+      dragPointerId = null;
       viewport.classList.remove("is-dragging");
-      if (viewport.hasPointerCapture?.(e.pointerId)) viewport.releasePointerCapture(e.pointerId);
+      if (e?.pointerId != null && viewport.hasPointerCapture?.(e.pointerId)) {
+        viewport.releasePointerCapture(e.pointerId);
+      }
+      wrapScroll();
       updateFades();
-      e.stopPropagation();
+      e?.stopPropagation?.();
     };
 
     viewport.addEventListener("pointerdown", (e) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
-      isDragging = true;
+      pointerDown = true;
+      isDragging = false;
+      dragPointerId = e.pointerId;
       dragStartX = e.clientX;
       dragStartScroll = viewport.scrollLeft;
-      viewport.classList.add("is-dragging");
+      viewport.classList.remove("is-dragging");
       viewport.setPointerCapture(e.pointerId);
       e.stopPropagation();
     });
 
     viewport.addEventListener("pointermove", (e) => {
-      if (!isDragging) return;
-      viewport.scrollLeft = dragStartScroll - (e.clientX - dragStartX);
+      if (!pointerDown || e.pointerId !== dragPointerId) return;
+      const dx = e.clientX - dragStartX;
+      if (!isDragging && Math.abs(dx) < 5) return;
+      if (!isDragging) {
+        isDragging = true;
+        viewport.classList.add("is-dragging");
+      }
+      viewport.scrollLeft = dragStartScroll - dx;
+      wrapScroll();
       updateFades();
       e.stopPropagation();
     });
 
     viewport.addEventListener("pointerup", endDrag);
     viewport.addEventListener("pointercancel", endDrag);
+    window.addEventListener("pointerup", endDrag, true);
+    window.addEventListener("pointercancel", endDrag, true);
 
     viewport.addEventListener("wheel", (e) => {
       if (isDragging) return;
@@ -191,13 +371,44 @@
       e.stopPropagation();
       e.preventDefault();
       viewport.scrollLeft += delta;
+      wrapScroll();
       updateFades();
     }, { passive: false });
 
     viewport.addEventListener("scroll", updateFades, { passive: true });
     window.addEventListener("resize", updateFades);
+
+    logosAutoTickers.push((now) => {
+      if (!clientsSlide?.classList.contains("is-active") || !logosMotionOk() || isDragging) {
+        lastAutoTs = 0;
+        return;
+      }
+      if (!canAutoScroll()) return;
+      if (!lastAutoTs) {
+        lastAutoTs = now;
+        return;
+      }
+      const dt = Math.min(64, now - lastAutoTs) / 1000;
+      lastAutoTs = now;
+      autoCarry += AUTO_SCROLL_SPEED * dt;
+      const step = Math.floor(autoCarry);
+      if (step < 1) return;
+      autoCarry -= step;
+      viewport.scrollLeft += step;
+      wrapScroll();
+      updateFades();
+    });
+
     updateFades();
   });
+
+  (function startLogosAutoScroll() {
+    function tick(now) {
+      logosAutoTickers.forEach((step) => step(now));
+      requestAnimationFrame(tick);
+    }
+    requestAnimationFrame(tick);
+  })();
 
   // Touch swipe
   let tx = 0, ty = 0, touchTarget = null;
@@ -207,7 +418,7 @@
     touchTarget = e.target;
   }, { passive: true });
   deck.addEventListener("touchend", (e) => {
-    if (touchTarget?.closest?.(".logos-viewport")) return;
+    if (touchTarget?.closest?.(".logos-viewport") || touchTarget?.closest?.(".testimonials-track")) return;
     const dx = e.changedTouches[0].clientX - tx;
     const dy = e.changedTouches[0].clientY - ty;
     if (Math.abs(dx) > 55 && Math.abs(dx) > Math.abs(dy)) dx < 0 ? next() : prev();
@@ -225,24 +436,103 @@
     el.addEventListener("click", (e) => { e.preventDefault(); goTo(parseInt(el.dataset.goto, 10)); })
   );
 
-  // Acordeón expandible (página 4 — varias tarjetas abiertas a la vez)
-  const expandTiles = Array.from(document.querySelectorAll(".tile--expand"));
+  // Acordeón expandible (página 4 — una tarjeta abierta, ecosistema conectado)
+  const ecoSlide = document.getElementById("slideEco");
+  const ecoWrap = document.getElementById("ecoWrap");
+  const ecoFlow = document.getElementById("ecoFlow");
+  const ecoLinkPathA = document.getElementById("ecoLinkPathA");
+  const ecoLinkPathB = document.getElementById("ecoLinkPathB");
+  const expandTiles = ecoSlide ? Array.from(ecoSlide.querySelectorAll(".tile--expand")) : [];
+  const ECO_FLOW = {
+    web: "La plataforma centraliza datos de tótem y app → <span class=\"eco-flow__step\">RR. HH. visualiza todo en tiempo real</span>.",
+    totem: "<span class=\"eco-flow__step\">El colaborador marca</span> <span class=\"eco-flow__arrow\">→</span> la información llega a la plataforma <span class=\"eco-flow__arrow\">→</span> <span class=\"eco-flow__step\">RR. HH. la visualiza en tiempo real</span>.",
+    colab: "<span class=\"eco-flow__step\">El colaborador marca</span> <span class=\"eco-flow__arrow\">→</span> la información llega a la plataforma <span class=\"eco-flow__arrow\">→</span> <span class=\"eco-flow__step\">RR. HH. la visualiza en tiempo real</span>.",
+  };
   function closeTile(t) { t.classList.remove("is-open"); t.setAttribute("aria-expanded", "false"); }
   function updateExpandSlideState(slide) {
     if (!slide) return;
     const anyOpen = expandTiles.some((t) => slide.contains(t) && t.classList.contains("is-open"));
     slide.classList.toggle("has-open", anyOpen);
   }
+  function ecoCardPoint(card) {
+    const wrapRect = ecoWrap.getBoundingClientRect();
+    const r = card.getBoundingClientRect();
+    return {
+      x: r.left + r.width / 2 - wrapRect.left,
+      y: r.top + r.height * 0.22 - wrapRect.top,
+    };
+  }
+  function ecoLinkPath(from, to) {
+    const midX = (from.x + to.x) / 2;
+    const midY = Math.min(from.y, to.y) - 28;
+    return "M " + from.x + " " + from.y + " Q " + midX + " " + midY + " " + to.x + " " + to.y;
+  }
+  function updateEcoLinks() {
+    if (!ecoSlide || !ecoWrap) return;
+    const open = expandTiles.find((t) => t.classList.contains("is-open"));
+    if (!open) {
+      ecoSlide.classList.remove("is-eco-linked");
+      ecoLinkPathA?.setAttribute("d", "");
+      ecoLinkPathB?.setAttribute("d", "");
+      return;
+    }
+    ecoSlide.classList.add("is-eco-linked");
+    const others = expandTiles.filter((t) => t !== open);
+    if (others.length < 2) return;
+    const from = ecoCardPoint(open);
+    ecoLinkPathA?.setAttribute("d", ecoLinkPath(from, ecoCardPoint(others[0])));
+    ecoLinkPathB?.setAttribute("d", ecoLinkPath(from, ecoCardPoint(others[1])));
+  }
+  function updateEcoFlow(tile) {
+    if (!ecoFlow) return;
+    if (!tile?.classList.contains("is-open")) {
+      ecoFlow.innerHTML = "";
+      ecoFlow.classList.remove("is-visible");
+      return;
+    }
+    const key = tile.dataset.eco || "web";
+    ecoFlow.innerHTML = ECO_FLOW[key] || "";
+    ecoFlow.classList.add("is-visible");
+  }
+  function resetEcoSlide() {
+    if (!ecoSlide) return;
+    expandTiles.forEach(closeTile);
+    ecoSlide.classList.remove("is-eco-linked", "has-open");
+    updateEcoLinks();
+    updateEcoFlow(null);
+  }
   function toggleTile(tile) {
     const slide = tile.closest(".slide");
+    if (slide === ecoSlide) {
+      const willOpen = !tile.classList.contains("is-open");
+      if (willOpen) {
+        tile.classList.add("is-open");
+        tile.setAttribute("aria-expanded", "true");
+      } else {
+        closeTile(tile);
+      }
+      updateExpandSlideState(slide);
+      requestAnimationFrame(() => {
+        updateEcoLinks();
+        updateEcoFlow(tile.classList.contains("is-open") ? tile : null);
+      });
+      setTimeout(updateEcoLinks, 480);
+      return;
+    }
     const willOpen = !tile.classList.contains("is-open");
     if (willOpen) {
+      expandTiles.forEach((t) => { if (t !== tile) closeTile(t); });
       tile.classList.add("is-open");
       tile.setAttribute("aria-expanded", "true");
     } else {
       closeTile(tile);
     }
     updateExpandSlideState(slide);
+    requestAnimationFrame(() => {
+      updateEcoLinks();
+      updateEcoFlow(tile.classList.contains("is-open") ? tile : null);
+    });
+    setTimeout(updateEcoLinks, 480);
   }
   expandTiles.forEach((tile) => {
     tile.addEventListener("click", () => toggleTile(tile));
@@ -435,7 +725,7 @@
   document.getElementById("smodalClose").addEventListener("click", closeStore);
   smodal.addEventListener("click", (e) => { if (e.target === smodal) closeStore(); });
 
-  // Panel lateral de funcionalidades (p?gina 6)
+  // Panel lateral de funcionalidades (página 6)
   const featSlide = document.getElementById("slideFeatures");
   const featSide = document.getElementById("featSide");
   const featSideBackdrop = document.getElementById("featSideBackdrop");
@@ -478,10 +768,9 @@
       featPan = clampFeatPan(0, 0);
       applyFeatPan();
       featSideFrame.classList.add("is-zoomed");
-      featSideFrame.setAttribute("aria-label", "Arrastr? para mover ? click para reducir");
+      featSideFrame.setAttribute("aria-label", "Arrastrá para mover · click para reducir");
     } else {
       resetFeatSideZoom();
-      return;
     }
   }
   function toggleFeatSideZoom() {
@@ -620,7 +909,7 @@
     }
   });
   window.addEventListener("resize", () => {
-    if (!featSideFrame.classList.contains("is-zoomed")) return;
+    if (!featSideFrame?.classList.contains("is-zoomed")) return;
     featPan = clampFeatPan(featPan.x, featPan.y);
     applyFeatPan();
   });
@@ -688,12 +977,155 @@
   document.getElementById("fsBtn").addEventListener("click", toggleFullscreen);
 
   // Keep transform correct on resize (vw based, so just re-render)
-  window.addEventListener("resize", () => render());
+  window.addEventListener("resize", () => {
+    render();
+    updateImpactLinks();
+    updateEcoLinks();
+  });
+
+  function resetImpactLink() {
+    if (!impactSlide) return;
+    impactSlide.classList.remove("is-impact-linked");
+    impactCards.forEach((c) => {
+      c.classList.remove("is-impact-active");
+      c.setAttribute("aria-pressed", "false");
+    });
+    if (impactLinkPath) impactLinkPath.setAttribute("d", "");
+  }
+
+  function cardLinkPoint(card) {
+    const wrapRect = impactWrap.getBoundingClientRect();
+    const r = card.getBoundingClientRect();
+    return {
+      x: r.left + r.width / 2 - wrapRect.left,
+      y: r.top + r.height * 0.38 - wrapRect.top,
+    };
+  }
+
+  function updateImpactLinks() {
+    if (!impactSlide?.classList.contains("is-impact-linked") || !impactLinkPath || impactCards.length < 3) return;
+    const pts = impactCards.map(cardLinkPoint);
+    const d =
+      "M " + pts[0].x + " " + pts[0].y +
+      " L " + pts[1].x + " " + pts[1].y +
+      " L " + pts[2].x + " " + pts[2].y +
+      " Z";
+    impactLinkPath.setAttribute("d", d);
+  }
+
+  function linkImpact(fromCard) {
+    if (!impactSlide) return;
+    impactSlide.classList.add("is-impact-linked");
+    impactCards.forEach((c) => {
+      const on = c === fromCard;
+      c.classList.toggle("is-impact-active", on);
+      c.setAttribute("aria-pressed", String(on));
+    });
+    requestAnimationFrame(updateImpactLinks);
+  }
+
+  impactCards.forEach((card) => {
+    card.addEventListener("click", (e) => {
+      e.stopPropagation();
+      if (impactSlide.classList.contains("is-impact-linked")) {
+        resetImpactLink();
+        return;
+      }
+      linkImpact(card);
+    });
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        card.click();
+      }
+    });
+  });
+
+  const testimonialsSlide = document.getElementById("slideTestimonials");
+  const testimonialsTrio = document.getElementById("testimonialsTrio");
+  const testimonialsTrack = document.getElementById("testimonialsTrack");
+  const testimonialsShell = document.getElementById("testimonialsShell");
+
+  if (testimonialsTrack && testimonialsShell && testimonialsTrio) {
+    let testimonialMarquee = testimonialsTrio.closest(".testimonials-marquee");
+
+    if (!testimonialMarquee) {
+      testimonialMarquee = document.createElement("div");
+      testimonialMarquee.className = "testimonials-marquee";
+      testimonialsTrack.insertBefore(testimonialMarquee, testimonialsTrio);
+      testimonialMarquee.appendChild(testimonialsTrio);
+    }
+
+    function appendTestimonialClone() {
+      const clone = testimonialsTrio.cloneNode(true);
+      clone.removeAttribute("id");
+      clone.classList.add("testimonials-row--clone");
+      clone.setAttribute("aria-hidden", "true");
+      clone.querySelectorAll(".quote--testimonial").forEach((q) => {
+        q.removeAttribute("tabindex");
+        q.removeAttribute("role");
+        q.removeAttribute("aria-expanded");
+      });
+      testimonialMarquee.appendChild(clone);
+    }
+
+    function ensureTestimonialClones() {
+      const clones = testimonialMarquee.querySelectorAll(".testimonials-row--clone");
+      if (clones.length >= 2) return;
+      if (clones.length === 0) appendTestimonialClone();
+      if (testimonialMarquee.querySelectorAll(".testimonials-row--clone").length < 2) {
+        appendTestimonialClone();
+      }
+    }
+
+    ensureTestimonialClones();
+
+    function testimonialMotionOk() {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        return document.documentElement.classList.contains("allow-motion");
+      }
+      return true;
+    }
+
+    function syncTestimonialMarquee() {
+      ensureTestimonialClones();
+      const loop = testimonialsTrio.offsetWidth + 22;
+      testimonialMarquee.style.setProperty("--testimonial-loop", loop + "px");
+      const pxPerSec = 28;
+      const durationSec = Math.max(75, Math.round(loop / pxPerSec));
+      testimonialMarquee.style.setProperty("--testimonial-duration", durationSec + "s");
+
+      const overflow = loop > 0 && testimonialMarquee.offsetWidth > testimonialsTrack.clientWidth + 4;
+      testimonialsShell.classList.toggle("has-overflow", overflow);
+      testimonialsShell.classList.toggle("is-centered", !overflow);
+      const runMarquee =
+        overflow &&
+        testimonialMotionOk() &&
+        testimonialsSlide.classList.contains("is-active");
+      testimonialsShell.classList.toggle("is-marquee-active", runMarquee);
+
+      if (runMarquee && !testimonialMarquee.dataset.marqueePrimed) {
+        const startAt = durationSec * 0.42;
+        testimonialMarquee.style.animationDelay = `-${startAt}s`;
+        testimonialMarquee.dataset.marqueePrimed = "1";
+      }
+      if (!runMarquee) {
+        testimonialMarquee.style.animationDelay = "";
+        testimonialMarquee.removeAttribute("data-marquee-primed");
+      }
+    }
+
+    window.syncTestimonialsCarousel = syncTestimonialMarquee;
+
+    window.addEventListener("resize", syncTestimonialMarquee);
+    syncTestimonialMarquee();
+  }
 
   // Posicionamiento inicial sin animaci?n (para restaurar la diapositiva guardada)
   const prevTransition = deck.style.transition;
   deck.style.transition = "none";
   render();
+  persistSlideIndex();
   requestAnimationFrame(() => {
     requestAnimationFrame(() => { deck.style.transition = prevTransition; });
   });
