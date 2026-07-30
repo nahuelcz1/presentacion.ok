@@ -1,0 +1,19 @@
+{
+  "addOns": {
+    "common": {
+      "name": "Punto Ok Presentación",
+      "logoUrl": "https://nahuelcz1.github.io/presentacion.ok/punto-ok-logo.png"
+    },
+    "meet": {
+      "web": {
+        "sidePanelUrl": "https://nahuelcz1.github.io/presentacion.ok/meet/side-panel.html",
+        "supportsScreenSharing": true,
+        "addOnOrigins": [
+          "https://nahuelcz1.github.io"
+        ],
+        "logoUrl": "https://nahuelcz1.github.io/presentacion.ok/punto-ok-logo.png",
+        "darkModeLogoUrl": "https://nahuelcz1.github.io/presentacion.ok/punto-ok-logo.png"
+      }
+    }
+  }
+}

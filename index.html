@@ -8,25 +8,25 @@
   <meta name="theme-color" content="#0071e3" />
   <meta name="color-scheme" content="light" />
   <link rel="canonical" href="https://nahuelcz1.github.io/presentacion.ok/" />
-  <link rel="icon" href="punto-ok-logo.svg" type="image/svg+xml" />
-  <link rel="icon" href="punto-ok-logo.png" type="image/png" />
-  <link rel="apple-touch-icon" href="punto-ok-logo.png" />
+  <link rel="icon" href="punto-ok-colaboradores.png" type="image/png" />
+  <link rel="apple-touch-icon" href="punto-ok-colaboradores.png" />
   <meta property="og:type" content="website" />
   <meta property="og:locale" content="es_PY" />
   <meta property="og:site_name" content="Punto Ok" />
   <meta property="og:title" content="Punto Ok · Presentación" />
   <meta property="og:description" content="La nueva forma de gestionar Recursos Humanos. Control de asistencia, turnos y salarios en un solo sistema." />
   <meta property="og:url" content="https://nahuelcz1.github.io/presentacion.ok/" />
-  <meta property="og:image" content="https://nahuelcz1.github.io/presentacion.ok/bg-pag1.png" />
-  <meta property="og:image:alt" content="Punto Ok: plataforma web y apps móviles para gestión de RR.HH." />
-  <meta name="twitter:card" content="summary_large_image" />
+  <meta property="og:image" content="https://nahuelcz1.github.io/presentacion.ok/punto-ok-colaboradores.png" />
+  <meta property="og:image:alt" content="Logo Punto Ok Colaboradores — app móvil para marcación y gestión de RR.HH." />
+  <meta name="twitter:card" content="summary" />
   <meta name="twitter:title" content="Punto Ok · Presentación" />
   <meta name="twitter:description" content="La nueva forma de gestionar Recursos Humanos en Paraguay." />
-  <meta name="twitter:image" content="https://nahuelcz1.github.io/presentacion.ok/bg-pag1.png" />
+  <meta name="twitter:image" content="https://nahuelcz1.github.io/presentacion.ok/punto-ok-colaboradores.png" />
+  <meta name="twitter:image:alt" content="Logo Punto Ok Colaboradores — app móvil para marcación y gestión de RR.HH." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=97" />
+  <link rel="stylesheet" href="styles.css?v=104" />
 </head>
 <body>
   <a class="skip-link" href="#deck">Saltar a la presentación</a>
@@ -37,8 +37,8 @@
       <img src="punto-ok-logo.svg" alt="Punto Ok" class="brand__logo" />
     </a>
     <div class="topbar__right">
-      <button class="iconbtn iconbtn--marker" id="markerBtn" title="Activar/desactivar marcador (M)" aria-label="Marcador" aria-pressed="false">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4L16.5 3.5z"/><path d="M14 6l4 4"/></svg>
+      <button class="iconbtn" id="presenterOpenBtn" title="Control flotante siempre visible (R)" aria-label="Control flotante siempre visible" aria-pressed="false">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="3" width="8" height="8" rx="1.5"/><rect x="13" y="13" width="8" height="8" rx="1.5"/><path d="M11 7h2M7 11v2M17 11v2M11 17h2"/></svg>
       </button>
       <button class="iconbtn" id="gridBtn" title="Ver todas las diapositivas (G)" aria-label="Ver todas">
         <svg viewBox="0 0 24 24" width="20" height="20"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>
@@ -285,7 +285,7 @@
           <div class="mark-side-backdrop" id="markSideBackdrop" aria-hidden="true"></div>
           <div class="compare">
             <article class="ccard ccard--video anim" data-anim="3" data-video-side="left">
-              <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-totem.png" alt="Punto Ok Totem" /></span><div><strong>Punto Ok! Tótem</strong><small>Marcación presencial</small></div><button type="button" class="app-play" data-video="video-marcacion-totem.mp4" data-title="Punto Ok! Totem" aria-label="Ver video de Punto Ok Totem"><img src="boton-play.png" alt="" /></button></header>
+              <header class="ccard__head"><span class="ccard__badge ccard__badge--img"><img src="punto-ok-totem.png" alt="Punto Ok Totem" /></span><div><strong>Punto Ok! Tótem</strong><small>Marcación presencial</small></div><button type="button" class="app-play" data-video="video-marcacion-totem1.mp4.mov" data-title="Punto Ok! Totem" aria-label="Ver video de Punto Ok Totem"><img src="boton-play.png" alt="" /></button></header>
               <ul class="checks">
                 <li>Pensada para marcación presencial</li>
                 <li>Reconocimiento facial</li>
@@ -581,8 +581,13 @@
   </button>
 
   <!-- DOTS -->
+  <button class="marker-dock" id="markerBtn" type="button" title="Activar/desactivar pincel (M)" aria-label="Pincel" aria-pressed="false">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4L16.5 3.5z"/><path d="M14 6l4 4"/></svg>
+  </button>
   <nav class="dots" id="dots" aria-label="Navegación de diapositivas"></nav>
   <div class="counter" id="counter" aria-hidden="true">1 / 11</div>
+
+  <div class="presenter-toast" id="presenterToast" role="status" aria-live="polite" hidden></div>
 
   <!-- OVERVIEW (selector de páginas) -->
   <div class="overview" id="overview" aria-hidden="true">
@@ -625,6 +630,8 @@
     </div>
   </div>
 
-  <script src="script.js?v=53"></script>
+  <script src="script.js?v=56"></script>
+  <script src="presenter-remote-mini.js"></script>
+  <script src="presenter-bridge.js"></script>
 </body>
 </html>

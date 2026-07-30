@@ -19,6 +19,13 @@
   --glass-border: rgba(255, 255, 255, 0.78);
   --glass-blur: 22px;
   --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), 0 1px 0 rgba(255, 255, 255, 0.85) inset;
+  --dock-pad-y: 11px;
+  --dock-pad-x: 16px;
+  --dock-dot: 8px;
+  --dock-bar-h: calc(var(--dock-pad-y) * 2 + var(--dock-dot));
+  --dock-glass: rgba(255, 255, 255, .55);
+  --dock-glass-dark: rgba(40, 40, 44, .55);
+  --dock-shadow: 0 6px 24px rgba(0, 0, 0, .08);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -116,13 +123,14 @@ body.no-anim * { transition: none !important; }
 }
 .iconbtn svg { fill: currentColor; }
 .iconbtn:hover { background: rgba(0,0,0,.06); color: var(--ink); transform: scale(1.06); }
+.iconbtn.is-active { background: rgba(0, 113, 227, .12); color: var(--blue); }
 .iconbtn--dark { color: #f5f5f7; }
 .iconbtn--dark:hover { background: rgba(255,255,255,.14); color: #fff; }
-.iconbtn--marker svg { fill: none; }
-.iconbtn--marker.is-active { background: rgba(255,55,95,.12); color: #ff375f; }
-.iconbtn--marker.is-active:hover { background: rgba(255,55,95,.18); color: #ff375f; }
 body.marker-on { cursor: crosshair; }
-body.marker-on button, body.marker-on a, body.marker-on .app-play, body.marker-on .iconbtn { cursor: pointer; }
+body.marker-on button, body.marker-on a, body.marker-on .app-play, body.marker-on .iconbtn, body.marker-on .marker-dock { cursor: pointer; }
+body.marker-on .mark-side__frame video {
+  pointer-events: none;
+}
 
 /* ---------- PROGRESS ---------- */
 .progress { position: fixed; top: 56px; left: 0; right: 0; height: 2px; z-index: 39; background: transparent; }
@@ -2445,16 +2453,93 @@ body.on-dark .arrow { background: rgba(255,255,255,.12); color: #fff; }
 body.on-dark .arrow:hover { background: rgba(255,255,255,.22); }
 
 /* ---------- DOTS ---------- */
-.dots { position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 35; display: flex; align-items: center; gap: 11px; padding: 11px 16px; background: rgba(255,255,255,.55); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border-radius: 999px; box-shadow: 0 6px 24px rgba(0,0,0,.08); }
+.dots {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%); z-index: 35;
+  display: flex; align-items: center; gap: 11px;
+  padding: var(--dock-pad-y) var(--dock-pad-x);
+  background: var(--dock-glass);
+  backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+  border-radius: 999px; box-shadow: var(--dock-shadow);
+}
 .dot { width: 8px; height: 8px; border-radius: 50%; border: 0; background: #c7c7cc; cursor: pointer; padding: 0; transition: .35s var(--ease); }
 .dot:hover { background: #9a9a9f; }
 .dot.is-active { background: var(--blue); width: 28px; border-radius: 999px; }
-body.on-dark .dots { background: rgba(40,40,44,.55); }
+body.on-dark .dots { background: var(--dock-glass-dark); }
 body.on-dark .dot { background: #55555a; }
 body.on-dark .dot.is-active { background: var(--blue-2); }
 
-.counter { position: fixed; bottom: 32px; right: 26px; z-index: 35; font-size: .84rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; background: rgba(255,255,255,.55); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 7px 15px; border-radius: 999px; }
-body.on-dark .counter { color: #c7c7cc; background: rgba(40,40,44,.55); }
+.marker-dock {
+  position: fixed;
+  left: 26px;
+  bottom: 28px;
+  z-index: 35;
+  width: 44px;
+  height: 44px;
+  border: 0;
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 0;
+  background: var(--dock-glass);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: var(--dock-shadow);
+  color: var(--ink-soft);
+  transition: transform .25s var(--ease), background .25s var(--ease-soft), color .25s, box-shadow .25s var(--ease-soft);
+}
+.marker-dock svg { fill: none; width: 18px; height: 18px; }
+.marker-dock:hover {
+  transform: scale(1.06);
+  background: rgba(255, 255, 255, .72);
+  color: var(--ink);
+}
+.marker-dock.is-active {
+  background: rgba(255, 55, 95, .14);
+  color: #ff375f;
+  box-shadow: 0 6px 24px rgba(255, 55, 95, .16);
+}
+.marker-dock.is-active:hover {
+  background: rgba(255, 55, 95, .2);
+  color: #ff375f;
+}
+body.on-dark .marker-dock {
+  background: var(--dock-glass-dark);
+  color: #c7c7cc;
+}
+body.on-dark .marker-dock:hover {
+  background: rgba(58, 58, 62, .72);
+  color: #fff;
+}
+body.on-dark .marker-dock.is-active {
+  background: rgba(255, 55, 95, .18);
+  color: #ff6482;
+}
+
+.presenter-toast {
+  position: fixed;
+  left: 50%;
+  bottom: 96px;
+  transform: translateX(-50%);
+  z-index: 45;
+  max-width: min(92vw, 420px);
+  padding: 10px 16px;
+  border-radius: 12px;
+  background: rgba(29, 29, 31, .88);
+  color: #f5f5f7;
+  font-size: .84rem;
+  line-height: 1.35;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, .18);
+  pointer-events: none;
+}
+.presenter-toast[hidden] { display: none; }
+body.presenter-detached .presenter-toast {
+  bottom: 28px;
+}
+
+.counter { position: fixed; bottom: 32px; right: 26px; z-index: 35; font-size: .84rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; background: var(--dock-glass); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); padding: 7px 15px; border-radius: 999px; }
+body.on-dark .counter { color: #c7c7cc; background: var(--dock-glass-dark); }
 
 /* ---------- OVERVIEW (page selector) ---------- */
 .overview {
@@ -2498,6 +2583,21 @@ body.on-dark .counter { color: #c7c7cc; background: rgba(40,40,44,.55); }
   animation: marker-life 3s linear forwards;
 }
 @keyframes marker-life { 0%, 75% { opacity: 1; } 100% { opacity: 0; } }
+
+/* ---------- GOOGLE MEET MAIN STAGE (iframe) ---------- */
+html.meet-stage .skip-link,
+html.meet-stage .topbar,
+html.meet-stage .progress,
+html.meet-stage .arrow,
+html.meet-stage .dots,
+html.meet-stage .counter,
+html.meet-stage .marker-dock {
+  display: none !important;
+}
+html.meet-stage .slide {
+  padding-top: 56px;
+  padding-bottom: 56px;
+}
 
 /* ---------- RESPONSIVE ---------- */
 @media (max-width: 900px) {

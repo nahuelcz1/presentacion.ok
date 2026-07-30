@@ -2,7 +2,20 @@
   const deck = document.getElementById("deck");
   const slides = Array.from(deck.querySelectorAll(".slide"));
   const total = slides.length;
-  const SLIDE_STORE_KEY = "puntook-presentacion-slide";
+  const meetParams = new URLSearchParams(location.search);
+  const isMeetStage = meetParams.get("meet") === "stage";
+  if (isMeetStage) document.documentElement.classList.add("meet-stage");
+
+  const deckConfig = Object.assign(
+    {
+      storageKey: "puntook-presentacion-slide",
+      persist: !isMeetStage,
+      emitExternalSlideChanges: true,
+    },
+    window.PRESENTATION_CONFIG || {}
+  );
+  const SLIDE_STORE_KEY = deckConfig.storageKey;
+  const slideChangeListeners = new Set();
 
   function clampSlideIndex(i) {
     return Math.max(0, Math.min(total - 1, i));
@@ -21,6 +34,7 @@
   function loadSavedSlideIndex() {
     const fromHash = parseSlideIndexFromHash();
     if (fromHash !== null) return clampSlideIndex(fromHash);
+    if (isMeetStage || !deckConfig.persist) return 0;
     try {
       const raw = localStorage.getItem(SLIDE_STORE_KEY);
       if (raw === null) return 0;
@@ -33,11 +47,37 @@
   }
 
   function persistSlideIndex() {
+    if (!deckConfig.persist) return;
     try {
       localStorage.setItem(SLIDE_STORE_KEY, String(current));
     } catch (_) { /* private mode / blocked storage */ }
     const hash = "#" + (current + 1);
     if (location.hash !== hash) history.replaceState(null, "", hash);
+  }
+
+  function getSlideState(index) {
+    const i = index == null ? current : clampSlideIndex(index);
+    const slide = slides[i];
+    return {
+      index: i,
+      page: i + 1,
+      title: slide?.dataset.title || "",
+      id: slide?.id || null,
+      total,
+      hash: "#" + (i + 1),
+    };
+  }
+
+  function emitSlideChange() {
+    const state = getSlideState();
+    slideChangeListeners.forEach((fn) => {
+      try { fn(state); } catch (_) { /* listener error */ }
+    });
+    if (deckConfig.emitExternalSlideChanges && window.parent !== window) {
+      try {
+        window.parent.postMessage({ source: "puntook-deck", type: "state", state }, location.origin);
+      } catch (_) { /* cross-origin */ }
+    }
   }
 
   let current = loadSavedSlideIndex();
@@ -170,10 +210,21 @@
     }
   }
 
-  function goTo(i) {
-    current = clampSlideIndex(i);
-    persistSlideIndex();
+  function goTo(i, options) {
+    const opts = options || {};
+    const nextIndex = clampSlideIndex(i);
+    if (nextIndex === current && !opts.force) {
+      emitSlideChange();
+      return;
+    }
+    current = nextIndex;
+    if (opts.persist !== false && deckConfig.persist) persistSlideIndex();
+    else if (opts.persist === false) {
+      const hash = "#" + (current + 1);
+      if (location.hash !== hash) history.replaceState(null, "", hash);
+    }
     render();
+    emitSlideChange();
   }
   const next = () => goTo(current + 1);
   const prev = () => goTo(current - 1);
@@ -188,6 +239,7 @@
     if (idx !== current) {
       current = idx;
       render();
+      emitSlideChange();
     }
   });
 
@@ -623,6 +675,7 @@
   });
   markSideBackdrop?.addEventListener("click", (e) => {
     e.stopPropagation();
+    if (document.body.classList.contains("marker-on")) return;
     closeAllMarkSides();
   });
 
@@ -933,12 +986,21 @@
   function setMarker(on) {
     markerOn = on;
     document.body.classList.toggle("marker-on", on);
-    markerBtn.classList.toggle("is-active", on);
-    markerBtn.setAttribute("aria-pressed", String(on));
+    if (markerBtn) {
+      markerBtn.classList.toggle("is-active", on);
+      markerBtn.setAttribute("aria-pressed", String(on));
+    }
+    const presenterMarker = document.getElementById("presenterMarker");
+    if (presenterMarker) {
+      presenterMarker.classList.toggle("is-active", on);
+      presenterMarker.setAttribute("aria-pressed", String(on));
+    }
     if (!on && curLine) endStroke();
+    document.dispatchEvent(new CustomEvent("puntook:marker", { detail: { on } }));
   }
   function toggleMarker() { setMarker(!markerOn); }
-  markerBtn.addEventListener("click", (e) => { e.stopPropagation(); toggleMarker(); });
+  function isMarkerOn() { return markerOn; }
+  if (markerBtn) markerBtn.addEventListener("click", (e) => { e.stopPropagation(); toggleMarker(); });
 
   function startStroke(x, y) {
     if (!markerOn) return;
@@ -962,7 +1024,7 @@
   }
   window.addEventListener("pointerdown", (e) => {
     if (!markerOn) return;
-    if (e.target.closest("button, a, .app-play, .vmodal, .smodal, .overview, .feat-side, .feat-side-backdrop, .mark-side-backdrop, .mark-side, .qcard--side, input, video")) return;
+    if (e.target.closest("button, a, .app-play, .vmodal, .smodal, .overview, .feat-side, .feat-side-backdrop, .qcard--side, input, .iconbtn, .arrow, .topbar, .presenter-shell")) return;
     startStroke(e.clientX, e.clientY);
   });
   window.addEventListener("pointermove", (e) => extendStroke(e.clientX, e.clientY));
@@ -1121,11 +1183,114 @@
     syncTestimonialMarquee();
   }
 
+  const DEMO_URL = "https://www.alpha.puntook.com.py/empresa-v2";
+
+  function replayCurrentAnimation() {
+    const slide = slides[current];
+    if (!slide) return;
+    if (slide === heroSlide) heroSlide.classList.remove("hero-intro-complete");
+    const anims = Array.from(slide.querySelectorAll(".anim"));
+    anims.forEach((el) => {
+      el.style.transition = "none";
+      el.style.opacity = "0";
+      el.style.transform = "translateY(34px)";
+    });
+    void slide.offsetWidth;
+    requestAnimationFrame(() => {
+      anims.forEach((el) => {
+        el.style.transition = "";
+        el.style.opacity = "";
+        el.style.transform = "";
+      });
+      render();
+    });
+    if (slide.id === "slideTestimonials") {
+      document.querySelector(".testimonials-marquee")?.removeAttribute("data-marquee-primed");
+      if (typeof window.syncTestimonialsCarousel === "function") window.syncTestimonialsCarousel();
+    }
+  }
+
+  function togglePresentationVideos() {
+    const slide = slides[current];
+    let anyPlaying = false;
+    slide?.querySelectorAll("video").forEach((video) => {
+      if (!video.paused && !video.ended) anyPlaying = true;
+    });
+    if (supportBgVideo && slide === supportSlide && !supportBgVideo.paused) anyPlaying = true;
+    const vmodalOpen = vmodal?.classList.contains("is-open");
+    if (vmodalOpen && vmodalVideo && !vmodalVideo.paused) anyPlaying = true;
+
+    const shouldPause = anyPlaying;
+    slide?.querySelectorAll("video").forEach((video) => {
+      if (shouldPause) video.pause();
+      else video.play().catch(() => {});
+    });
+    if (supportBgVideo && slide === supportSlide) {
+      if (shouldPause) supportBgVideo.pause();
+      else syncSupportBgVideo();
+    }
+    if (vmodalOpen && vmodalVideo) {
+      if (shouldPause) vmodalVideo.pause();
+      else vmodalVideo.play().catch(() => {});
+    }
+    return { playing: !shouldPause };
+  }
+
+  function resetPresentation() {
+    if (typeof setMarker === "function") setMarker(false);
+    if (typeof closeOverview === "function") closeOverview();
+    if (typeof closeVideoModal === "function") closeVideoModal();
+    if (typeof closeAllMarkSides === "function") closeAllMarkSides(true, true);
+    if (typeof closeFeatSide === "function") closeFeatSide(true, true);
+    if (typeof resetImpactLink === "function") resetImpactLink();
+    if (typeof resetEcoSlide === "function") resetEcoSlide();
+    if (heroSlide) heroSlide.classList.remove("hero-intro-complete");
+    heroIntroSeen = false;
+    goTo(0, { force: true });
+  }
+
+  function openDemo() {
+    window.open(DEMO_URL, "_blank", "noopener,noreferrer");
+  }
+
+  function onSlideChange(fn) {
+    if (typeof fn !== "function") return () => {};
+    slideChangeListeners.add(fn);
+    return () => slideChangeListeners.delete(fn);
+  }
+
+  window.PuntoOkDeck = {
+    goTo: (index, options) => goTo(index, options),
+    next,
+    prev,
+    first: () => goTo(0),
+    last: () => goTo(total - 1),
+    getCurrent: () => current,
+    getTotal: () => total,
+    getSlide: (index) => getSlideState(index),
+    getSlides: () => slides.map((s, i) => ({
+      index: i,
+      page: i + 1,
+      title: s.dataset.title || "",
+      id: s.id || null,
+    })),
+    getState: () => getSlideState(),
+    onSlideChange,
+    replayAnimation: replayCurrentAnimation,
+    toggleVideos: togglePresentationVideos,
+    reset: resetPresentation,
+    openDemo,
+    toggleMarker,
+    isMarkerOn,
+    isMeetStage: () => isMeetStage,
+  };
+
   // Posicionamiento inicial sin animaci?n (para restaurar la diapositiva guardada)
   const prevTransition = deck.style.transition;
   deck.style.transition = "none";
   render();
-  persistSlideIndex();
+  if (deckConfig.persist) persistSlideIndex();
+  emitSlideChange();
   requestAnimationFrame(() => {
     requestAnimationFrame(() => { deck.style.transition = prevTransition; });
   });

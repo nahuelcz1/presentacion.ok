@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Punto Ok · Presentación (Meet — Escenario)</title>
+  <meta name="robots" content="noindex" />
+  <script src="https://www.gstatic.com/meetjs/addons/1.1.0/meet.addons.js"></script>
+  <style>
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+    }
+    #presentation-frame {
+      width: 100%;
+      height: 100%;
+      border: 0;
+      display: block;
+      background: #000;
+    }
+  </style>
+</head>
+<body>
+  <iframe
+    id="presentation-frame"
+    title="Punto Ok — Presentación"
+    allow="autoplay; fullscreen"
+    referrerpolicy="same-origin"
+  ></iframe>
+
+  <script src="../meet-config.js"></script>
+  <script src="../meet-controls.js"></script>
+  <script src="../meet-main.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      PuntoOkMeetMain.initMainStage().catch((err) => {
+        console.error("[PuntoOk Meet] Error al iniciar escenario:", err);
+      });
+    });
+  </script>
+</body>
+</html>

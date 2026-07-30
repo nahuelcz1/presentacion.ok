@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Punto Ok · Control de presentación (Meet)</title>
+  <meta name="robots" content="noindex" />
+  <script src="https://www.gstatic.com/meetjs/addons/1.1.0/meet.addons.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1d1d1f;
+      --ink-soft: #6e6e73;
+      --line: #ededf0;
+      --blue: #0071e3;
+      --grad: linear-gradient(115deg, #0071e3 0%, #2997ff 45%, #00dfea 110%);
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      color: var(--ink);
+      background: #f5f5f7;
+      min-height: 100vh;
+      padding: 16px;
+    }
+    .panel {
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .panel__head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .panel__head img { width: 28px; height: 28px; }
+    .panel__head h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -.02em;
+    }
+    .panel__head p {
+      font-size: .78rem;
+      color: var(--ink-soft);
+    }
+    .status {
+      font-size: .78rem;
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      color: var(--ink-soft);
+    }
+    .status[data-kind="ok"] { color: #0a7a43; background: #ecfdf3; border-color: #bbf7d0; }
+    .status[data-kind="warn"] { color: #9a6700; background: #fffbeb; border-color: #fde68a; }
+    .status[data-kind="error"] { color: #b42318; background: #fef3f2; border-color: #fecdca; }
+    .now {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 14px;
+    }
+    .now__label {
+      font-size: .72rem;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .now__page {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -.03em;
+      line-height: 1;
+    }
+    .now__title {
+      margin-top: 6px;
+      font-size: .92rem;
+      color: var(--ink-soft);
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    button, select {
+      font: inherit;
+    }
+    .btn {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 12px;
+      font-size: .86rem;
+      font-weight: 600;
+      cursor: pointer;
+      background: #fff;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      transition: transform .15s ease, background .15s ease;
+    }
+    .btn:hover:not(:disabled) { transform: translateY(-1px); background: #fafafa; }
+    .btn:disabled { opacity: .45; cursor: not-allowed; }
+    .btn--primary {
+      grid-column: 1 / -1;
+      background: var(--grad);
+      color: #fff;
+      border: 0;
+      box-shadow: 0 8px 20px rgba(0, 113, 227, .22);
+    }
+    .btn--primary:hover:not(:disabled) { filter: brightness(1.03); }
+    .btn--accent {
+      grid-column: 1 / -1;
+      color: var(--blue);
+      border-color: rgba(0, 113, 227, .25);
+      background: rgba(0, 113, 227, .06);
+    }
+    .field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 12px;
+    }
+    .field label {
+      font-size: .74rem;
+      font-weight: 600;
+      color: var(--ink-soft);
+      text-transform: uppercase;
+      letter-spacing: .05em;
+    }
+    .field select {
+      width: 100%;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: 10px 12px;
+      background: #fff;
+      color: var(--ink);
+    }
+    .hint {
+      font-size: .74rem;
+      color: var(--ink-soft);
+      line-height: 1.45;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <header class="panel__head">
+      <img src="../punto-ok-logo.svg" alt="" />
+      <div>
+        <h1>Control de presentación</h1>
+        <p>Panel del presentador · Punto Ok</p>
+      </div>
+    </header>
+
+    <p class="status" id="meetStatus" data-kind="info">Conectando…</p>
+
+    <button class="btn btn--primary" id="meetStartActivity" type="button">
+      Iniciar en escenario principal
+    </button>
+
+    <section class="now" aria-live="polite">
+      <div class="now__label">Diapositiva actual</div>
+      <div class="now__page"><span id="meetPageLabel">1</span> / 11</div>
+      <div class="now__title" id="meetTitleLabel">Portada</div>
+    </section>
+
+    <div class="grid">
+      <button class="btn" id="meetPrev" type="button">Anterior</button>
+      <button class="btn" id="meetNext" type="button">Siguiente</button>
+      <button class="btn" id="meetFirst" type="button">Primera</button>
+      <button class="btn" id="meetLast" type="button">Última</button>
+    </div>
+
+    <div class="field">
+      <label for="meetSlideSelect">Ir a página</label>
+      <select id="meetSlideSelect" aria-label="Seleccionar página"></select>
+    </div>
+
+    <div class="grid">
+      <button class="btn" id="meetReset" type="button">Reiniciar</button>
+      <button class="btn" id="meetReplay" type="button">Repetir animación</button>
+      <button class="btn" id="meetToggleVideo" type="button">Play / Pausa video</button>
+      <button class="btn btn--accent" id="meetOpenDemo" type="button">Abrir demo</button>
+    </div>
+
+    <p class="hint">
+      Atajos en el escenario: ← →, Inicio, Fin. Los cambios desde el teclado sincronizan este panel.
+      Fuera de Meet, probá con <strong>meet/main-stage.html</strong> en otra pestaña (BroadcastChannel).
+    </p>
+  </div>
+
+  <script src="../meet-config.js"></script>
+  <script src="../meet-controls.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const bridge = PuntoOkMeetControls.createBridge("side", {
+        onMessage(msg) { controller.handleMessage(msg); },
+      });
+      const controller = PuntoOkMeetControls.createSidePanelController(bridge);
+      controller.bootstrap().catch((err) => {
+        console.error("[PuntoOk Meet] Panel lateral:", err);
+      });
+    });
+  </script>
+</body>
+</html>
