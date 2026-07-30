@@ -6,6 +6,16 @@
   const isMeetStage = meetParams.get("meet") === "stage";
   if (isMeetStage) document.documentElement.classList.add("meet-stage");
 
+  function motionOk() {
+    return !isMeetStage;
+  }
+  function syncMotionClass() {
+    const on = !isMeetStage;
+    document.documentElement.classList.toggle("motion-ok", on);
+    document.documentElement.classList.toggle("allow-motion", on);
+  }
+  syncMotionClass();
+
   const deckConfig = Object.assign(
     {
       storageKey: "puntook-presentacion-slide",
@@ -99,6 +109,7 @@
   const supportSlide = document.getElementById("slideSupport");
   const supportBgVideo = document.getElementById("supportBgVideo");
   const heroSlide = deck.querySelector(".slide--hero");
+  const dispersaSlide = document.getElementById("slideDispersa");
   let heroIntroSeen = false;
 
   // Build dots
@@ -135,6 +146,38 @@
     }
   });
   if (progressEl) progressEl.setAttribute("aria-valuemax", String(total));
+
+  let slideEnterTimer;
+  let lastRenderedSlide = -1;
+
+  function replaySlideEntrances(slide) {
+    if (!slide || !motionOk()) return;
+    if (slide === heroSlide) {
+      heroSlide.classList.remove("hero-intro-complete");
+      heroIntroSeen = false;
+    }
+    const anims = slide.querySelectorAll(".anim");
+    anims.forEach((el) => {
+      el.style.transition = "none";
+      el.style.opacity = "0";
+      el.style.transform = "translateY(34px)";
+    });
+    void slide.offsetWidth;
+    requestAnimationFrame(() => {
+      anims.forEach((el) => {
+        el.style.transition = "";
+        el.style.opacity = "";
+        el.style.transform = "";
+      });
+    });
+    if (!slide.classList.contains("slide--hero")) {
+      slide.classList.remove("slide-entering");
+      void slide.offsetWidth;
+      slide.classList.add("slide-entering");
+      clearTimeout(slideEnterTimer);
+      slideEnterTimer = setTimeout(() => slide.classList.remove("slide-entering"), 760);
+    }
+  }
 
   function render(options) {
     deck.style.transform = "translateX(" + -current * 100 + "vw)";
@@ -176,6 +219,9 @@
     if (ecoSlide && slides[current] !== ecoSlide) {
       resetEcoSlide();
     }
+    if (dispersaSlide && slides[current] !== dispersaSlide && typeof window.resetChaosMagnetic === "function") {
+      window.resetChaosMagnetic();
+    }
     if (testimonialsSlide && slides[current] !== testimonialsSlide) {
       testimonialsTrio?.closest(".testimonials-marquee")?.removeAttribute("data-marquee-primed");
     }
@@ -184,6 +230,17 @@
     }
     syncSupportBgVideo();
     syncHeroIntro();
+    const slideChanged = lastRenderedSlide !== current;
+    if (slideChanged && motionOk()) {
+      if (lastRenderedSlide >= 0) replaySlideEntrances(slides[current]);
+      else if (!slides[current]?.classList.contains("slide--hero")) {
+        const slide = slides[current];
+        slide.classList.add("slide-entering");
+        clearTimeout(slideEnterTimer);
+        slideEnterTimer = setTimeout(() => slide.classList.remove("slide-entering"), 760);
+      }
+    }
+    lastRenderedSlide = current;
   }
 
   function syncHeroIntro() {
@@ -302,10 +359,7 @@
   const logosAutoTickers = [];
 
   function logosMotionOk() {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      return document.documentElement.classList.contains("allow-motion");
-    }
-    return true;
+    return motionOk();
   }
 
   document.querySelectorAll(".clients").forEach((clients) => {
@@ -1143,10 +1197,7 @@
     ensureTestimonialClones();
 
     function testimonialMotionOk() {
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        return document.documentElement.classList.contains("allow-motion");
-      }
-      return true;
+      return motionOk();
     }
 
     function syncTestimonialMarquee() {
@@ -1285,7 +1336,138 @@
     isMeetStage: () => isMeetStage,
   };
 
-  // Posicionamiento inicial sin animaci?n (para restaurar la diapositiva guardada)
+  // Efectos premium: parallax, tilt 3D, botones magnéticos y glow ambiental
+  (function initPremiumMotion() {
+    if (isMeetStage) return;
+
+    const cursorGlow = document.getElementById("cursorGlow");
+    const heroStack = document.querySelector(".hero-device-stack");
+    const heroGlowEnter = document.querySelector(".hero-glow--enter");
+    const chaosWrap = document.getElementById("chaosWrap");
+    const chaosPieces = chaosWrap ? Array.from(chaosWrap.querySelectorAll(".chaos-piece")) : [];
+    const dispersaSlide = document.getElementById("slideDispersa");
+    const tiltCards = Array.from(document.querySelectorAll(".tile, .qcard, .ccard, .impact-card"));
+    const magneticEls = Array.from(document.querySelectorAll(
+      ".iconbtn, .arrow, .marker-dock, .app-play, .brand, .dot, #presenterOpenBtn"
+    ));
+
+    tiltCards.forEach((el) => el.classList.add("tilt-card"));
+    magneticEls.forEach((el) => el.classList.add("magnetic"));
+
+    let glowX = window.innerWidth / 2;
+    let glowY = window.innerHeight / 2;
+    let targetX = glowX;
+    let targetY = glowY;
+    const TILT_MAX = 4;
+    const MAG_RADIUS = 72;
+    const MAG_MAX = 4;
+    const CHAOS_MAG_RADIUS = 200;
+    const CHAOS_MAG_MAX = 42;
+
+    function resetChaosMagnetic() {
+      chaosPieces.forEach((piece) => {
+        const img = piece.querySelector(".chaos-piece__img");
+        img?.style.setProperty("--chaos-mag-x", "0px");
+        img?.style.setProperty("--chaos-mag-y", "0px");
+      });
+    }
+
+    function updateChaosMagnetic(e) {
+      if (!motionOk() || !dispersaSlide?.classList.contains("is-active")) {
+        resetChaosMagnetic();
+        return;
+      }
+      chaosPieces.forEach((piece) => {
+        const img = piece.querySelector(".chaos-piece__img");
+        if (!img) return;
+        const r = piece.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        const dist = Math.hypot(dx, dy);
+        if (dist > CHAOS_MAG_RADIUS || dist < 0.001) {
+          img.style.setProperty("--chaos-mag-x", "0px");
+          img.style.setProperty("--chaos-mag-y", "0px");
+          return;
+        }
+        const pull = (1 - dist / CHAOS_MAG_RADIUS) * CHAOS_MAG_MAX;
+        img.style.setProperty("--chaos-mag-x", ((-dx / dist) * pull).toFixed(2) + "px");
+        img.style.setProperty("--chaos-mag-y", ((-dy / dist) * pull).toFixed(2) + "px");
+      });
+    }
+
+    if (chaosWrap) {
+      chaosWrap.addEventListener("pointermove", updateChaosMagnetic, { passive: true });
+      chaosWrap.addEventListener("pointerleave", resetChaosMagnetic);
+    }
+    window.resetChaosMagnetic = resetChaosMagnetic;
+
+    document.addEventListener("pointermove", (e) => {
+      if (!motionOk()) return;
+      targetX = e.clientX;
+      targetY = e.clientY;
+
+      if (heroStack && heroSlide?.classList.contains("is-active") && heroSlide.classList.contains("hero-intro-complete")) {
+        const r = heroStack.getBoundingClientRect();
+        if (r.width > 0) {
+          const nx = Math.max(-1, Math.min(1, ((e.clientX - r.left) / r.width - 0.5) * 2));
+          const ny = Math.max(-1, Math.min(1, ((e.clientY - r.top) / r.height - 0.5) * 2));
+          heroStack.style.setProperty("--hero-nx", nx.toFixed(3));
+          heroStack.style.setProperty("--hero-ny", ny.toFixed(3));
+          if (heroGlowEnter) {
+            heroGlowEnter.style.setProperty("--hero-nx", nx.toFixed(3));
+            heroGlowEnter.style.setProperty("--hero-ny", ny.toFixed(3));
+          }
+        }
+      }
+
+      magneticEls.forEach((btn) => {
+        const r = btn.getBoundingClientRect();
+        const cx = r.left + r.width / 2;
+        const cy = r.top + r.height / 2;
+        const dx = e.clientX - cx;
+        const dy = e.clientY - cy;
+        const dist = Math.hypot(dx, dy);
+        if (dist > MAG_RADIUS || dist < 0.001) {
+          btn.style.setProperty("--mag-x", "0px");
+          btn.style.setProperty("--mag-y", "0px");
+          return;
+        }
+        const pull = (1 - dist / MAG_RADIUS) * MAG_MAX;
+        btn.style.setProperty("--mag-x", ((dx / dist) * pull).toFixed(2) + "px");
+        btn.style.setProperty("--mag-y", ((dy / dist) * pull).toFixed(2) + "px");
+      });
+    }, { passive: true });
+
+    tiltCards.forEach((el) => {
+      el.addEventListener("pointermove", (e) => {
+        if (!motionOk()) return;
+        const r = el.getBoundingClientRect();
+        const px = (e.clientX - r.left) / r.width - 0.5;
+        const py = (e.clientY - r.top) / r.height - 0.5;
+        el.style.setProperty("--tilt-y", (px * TILT_MAX).toFixed(2) + "deg");
+        el.style.setProperty("--tilt-x", (-py * TILT_MAX).toFixed(2) + "deg");
+      });
+      el.addEventListener("pointerleave", () => {
+        el.style.setProperty("--tilt-x", "0deg");
+        el.style.setProperty("--tilt-y", "0deg");
+      });
+    });
+
+    function tickGlow() {
+      if (motionOk() && cursorGlow) {
+        glowX += (targetX - glowX) * 0.055;
+        glowY += (targetY - glowY) * 0.055;
+        cursorGlow.style.setProperty("--glow-x", glowX.toFixed(1) + "px");
+        cursorGlow.style.setProperty("--glow-y", glowY.toFixed(1) + "px");
+      }
+      requestAnimationFrame(tickGlow);
+    }
+    tickGlow();
+  })();
+
+  // Posicionamiento inicial sin animación (para restaurar la diapositiva guardada)
   const prevTransition = deck.style.transition;
   deck.style.transition = "none";
   render();
