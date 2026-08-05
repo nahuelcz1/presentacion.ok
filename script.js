@@ -699,6 +699,32 @@
     markVideoCards.forEach((card) => closeMarkCard(card, clearVideo, immediate));
   }
 
+  function getMarkVideoState() {
+    return {
+      v1: !!markVideoCards[0]?.classList.contains("is-mark-open"),
+      v2: !!markVideoCards[1]?.classList.contains("is-mark-open"),
+    };
+  }
+
+  function playMarkVideo(which) {
+    if (!markSlide || !markVideoCards.length) return;
+    const markIndex = slides.indexOf(markSlide);
+    if (markIndex < 0) return;
+    const idx = which === 2 || which === "v2" || which === "V2" ? 1 : 0;
+    const card = markVideoCards[idx];
+    const btn = card?.querySelector(".app-play");
+    if (!btn) return;
+
+    // Toggle: si ya está abierto, desactivar
+    if (card.classList.contains("is-mark-open")) {
+      closeMarkCard(card);
+      return;
+    }
+
+    if (current !== markIndex) goTo(markIndex);
+    requestAnimationFrame(() => openMarkCard(btn));
+  }
+
   function openMarkCard(btn) {
     const card = btn.closest(".ccard--video");
     const src = btn.dataset.video || "";
@@ -1333,6 +1359,8 @@
     openDemo,
     toggleMarker,
     isMarkerOn,
+    playMarkVideo,
+    getMarkVideoState,
     isMeetStage: () => isMeetStage,
   };
 

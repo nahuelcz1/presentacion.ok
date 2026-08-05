@@ -18,7 +18,7 @@
   let watchTimer = null;
   let toastTimer = null;
 
-  const PIP_W = 156;
+  const PIP_W = 248;
   const PIP_H = 52;
 
   function deck() {
@@ -47,6 +47,7 @@
   function getRemoteState() {
     const d = deck();
     const state = d?.getState?.() || { page: 1, title: "", total: 11 };
+    const markOpen = d?.getMarkVideoState?.() || { v1: false, v2: false };
     return {
       page: state.page,
       title: state.title,
@@ -54,6 +55,8 @@
       markerOn: d?.isMarkerOn?.() ?? document.body.classList.contains("marker-on"),
       canPrev: state.page > 1,
       canNext: state.page < state.total,
+      markV1Open: !!markOpen.v1,
+      markV2Open: !!markOpen.v2,
     };
   }
 
@@ -70,6 +73,8 @@
       case "prev": d.prev(); break;
       case "next": d.next(); break;
       case "toggleMarker": d.toggleMarker?.(); break;
+      case "playMarkV1": d.playMarkVideo?.(1); break;
+      case "playMarkV2": d.playMarkVideo?.(2); break;
       default: break;
     }
     publishState();
