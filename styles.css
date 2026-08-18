@@ -3283,7 +3283,8 @@ body.marker-on .mark-side__frame video {
   height: 2px;
   z-index: 0;
   pointer-events: none;
-  overflow: visible;
+  overflow: hidden;
+  border-radius: 999px;
 }
 .impl-tl__track,
 .impl-tl__fill {
@@ -3298,11 +3299,11 @@ body.marker-on .mark-side__frame video {
   right: auto;
   width: 0;
   background: linear-gradient(90deg, #0071e3 0%, #2997ff 72%, #7ec8ff 100%);
-  box-shadow:
-    0 0 4px rgba(0, 113, 227, .35),
-    0 0 12px rgba(41, 151, 255, .28),
-    0 0 22px rgba(0, 113, 227, .16);
+  box-shadow: 0 0 8px rgba(41, 151, 255, .32);
   overflow: visible;
+  will-change: width;
+}
+.impl-tl.is-complete[data-hover-step] .impl-tl__fill {
   transition: width .45s var(--ease-soft), height .45s var(--ease-soft);
 }
 .impl-tl__fill::before,
@@ -3422,13 +3423,10 @@ body.marker-on .mark-side__frame video {
   transition: box-shadow .35s var(--ease-soft), background .35s var(--ease-soft);
 }
 .impl-tl.is-complete .impl-tl__track {
-  box-shadow: 0 0 10px rgba(126, 200, 255, .18);
+  box-shadow: none;
 }
 .impl-tl.is-complete .impl-tl__fill {
-  box-shadow:
-    0 0 6px rgba(0, 113, 227, .42),
-    0 0 16px rgba(41, 151, 255, .34),
-    0 0 28px rgba(0, 113, 227, .2);
+  box-shadow: 0 0 10px rgba(41, 151, 255, .38);
 }
 .impl-tl.is-complete .impl-tl__step:hover .impl-tl__node,
 .impl-tl.is-complete .impl-tl__step:focus-visible .impl-tl__node {
@@ -3460,15 +3458,12 @@ body.marker-on .mark-side__frame video {
   outline: 2px solid rgba(0, 113, 227, .45);
   outline-offset: 4px;
 }
-.impl-tl.is-complete[data-hover-step="1"] .impl-tl__fill { width: 12.5%; }
-.impl-tl.is-complete[data-hover-step="2"] .impl-tl__fill { width: 37.5%; }
-.impl-tl.is-complete[data-hover-step="3"] .impl-tl__fill { width: 62.5%; }
+.impl-tl.is-complete[data-hover-step="1"] .impl-tl__fill { width: 0; }
+.impl-tl.is-complete[data-hover-step="2"] .impl-tl__fill { width: 33.333%; }
+.impl-tl.is-complete[data-hover-step="3"] .impl-tl__fill { width: 66.667%; }
 .impl-tl.is-complete[data-hover-step="4"] .impl-tl__fill { width: 100%; }
 .impl-tl.is-complete[data-hover-step] .impl-tl__fill {
-  box-shadow:
-    0 0 8px rgba(0, 113, 227, .5),
-    0 0 20px rgba(41, 151, 255, .42),
-    0 0 34px rgba(126, 200, 255, .28);
+  box-shadow: 0 0 12px rgba(41, 151, 255, .48);
 }
 .impl-tl.is-complete[data-hover-step="1"] .impl-tl__step[data-step="1"] .impl-tl__node,
 .impl-tl.is-complete[data-hover-step="2"] .impl-tl__step[data-step="1"] .impl-tl__node,
@@ -3603,7 +3598,7 @@ body.marker-on .mark-side__frame video {
 
 /* Playing sequence */
 .impl-tl.is-playing .impl-tl__fill {
-  animation: impl-fill-x 2.25s var(--ease) .2s forwards;
+  animation: impl-fill-x 1.9s var(--ease) .2s forwards;
 }
 .impl-tl.is-playing .impl-tl__fill::after {
   animation: impl-tip-glow .45s var(--ease) .28s forwards;
@@ -3612,8 +3607,8 @@ body.marker-on .mark-side__frame video {
   opacity: 1;
 }
 .impl-tl.is-complete .impl-tl__fill::before {
-  opacity: 1;
-  animation: impl-shine-sweep 2.6s var(--ease-soft) .2s infinite;
+  opacity: .55;
+  animation: impl-shine-sweep 3.2s var(--ease-soft) .4s infinite;
 }
 .impl-tl.is-playing .impl-tl__step[data-step="1"] .impl-tl__node {
   animation: impl-node-in .55s var(--ease) .28s forwards;
@@ -3662,12 +3657,24 @@ body.marker-on .mark-side__frame video {
 }
 
 @keyframes impl-fill-x {
-  from { width: 0; }
-  to { width: 100%; }
+  0%, 4% { width: 0; }
+  5% { width: 0; }
+  30% { width: 33.333%; }
+  31% { width: 33.333%; }
+  57% { width: 66.667%; }
+  58% { width: 66.667%; }
+  83% { width: 100%; }
+  100% { width: 100%; }
 }
 @keyframes impl-fill-y {
-  from { height: 0; }
-  to { height: 100%; }
+  0%, 4% { height: 0; }
+  5% { height: 0; }
+  30% { height: 33.333%; }
+  31% { height: 33.333%; }
+  57% { height: 66.667%; }
+  58% { height: 66.667%; }
+  83% { height: 100%; }
+  100% { height: 100%; }
 }
 @keyframes impl-tip-glow {
   from { opacity: 0; transform: translate(45%, -50%) scale(.4); }
@@ -3843,15 +3850,15 @@ body.marker-on .mark-side__frame video {
     animation-name: impl-shine-sweep-y;
   }
   .impl-tl.is-playing .impl-tl__fill {
-    animation-name: impl-fill-y;
+    animation: impl-fill-y 1.9s var(--ease) .2s forwards;
   }
   .impl-tl.is-complete .impl-tl__fill {
     width: 100%;
     height: 100%;
   }
-  .impl-tl.is-complete[data-hover-step="1"] .impl-tl__fill { width: 100%; height: 12.5%; }
-  .impl-tl.is-complete[data-hover-step="2"] .impl-tl__fill { width: 100%; height: 37.5%; }
-  .impl-tl.is-complete[data-hover-step="3"] .impl-tl__fill { width: 100%; height: 62.5%; }
+  .impl-tl.is-complete[data-hover-step="1"] .impl-tl__fill { width: 100%; height: 0; }
+  .impl-tl.is-complete[data-hover-step="2"] .impl-tl__fill { width: 100%; height: 33.333%; }
+  .impl-tl.is-complete[data-hover-step="3"] .impl-tl__fill { width: 100%; height: 66.667%; }
   .impl-tl.is-complete[data-hover-step="4"] .impl-tl__fill { width: 100%; height: 100%; }
   .impl-tl__steps {
     grid-template-columns: 1fr;

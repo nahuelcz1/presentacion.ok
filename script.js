@@ -371,7 +371,7 @@
       implTlTimer = setTimeout(() => {
         implTimeline.classList.add("is-complete");
         implTimeline.classList.remove("is-playing");
-      }, 2800);
+      }, 2600);
     });
   }
 
