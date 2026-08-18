@@ -3,8 +3,8 @@
  * Reemplazá los placeholders antes de desplegar el add-on privado.
  */
 (function (global) {
-  const DEFAULT_GITHUB_PAGES_ORIGIN = "https://nahuelcz1.github.io";
-  const DEFAULT_REPO_BASE_PATH = "/presentacion.ok";
+  const DEFAULT_PUBLIC_ORIGIN = "https://puntook-presentacion.online";
+  const DEFAULT_REPO_BASE_PATH = "/";
 
   function normalizeBasePath(pathname) {
     if (!pathname || pathname === "/") return "/";
@@ -14,7 +14,7 @@
   }
 
   function resolveBaseUrl() {
-    const origin = global.location?.origin || DEFAULT_GITHUB_PAGES_ORIGIN;
+    const origin = global.location?.origin || DEFAULT_PUBLIC_ORIGIN;
     const basePath = normalizeBasePath(global.location?.pathname || DEFAULT_REPO_BASE_PATH + "/");
     return origin + basePath;
   }
@@ -26,7 +26,7 @@
     cloudProjectNumber: "YOUR_CLOUD_PROJECT_NUMBER",
 
     /** Origen principal del add-on (debe coincidir con addOnOrigins en deployment.json). */
-    addOnOrigin: DEFAULT_GITHUB_PAGES_ORIGIN,
+    addOnOrigin: DEFAULT_PUBLIC_ORIGIN,
 
     /** Base pública de la presentación (GitHub Pages). */
     baseUrl,

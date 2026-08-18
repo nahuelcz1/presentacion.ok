@@ -4,7 +4,7 @@ Integración de la presentación HTML (12 diapositivas, animaciones, videos e in
 
 - **Escenario principal:** la presentación visible para todos en la reunión.
 - **Panel lateral:** control del presentador (solo visible para quien comparte).
-- **Versión web standalone:** sigue funcionando en `/presentacion.ok/` sin cambios para el público general.
+- **Versión web standalone:** disponible en `https://puntook-presentacion.online/` para el público general.
 
 ---
 
@@ -60,7 +60,7 @@ Cuando el presentador usa **← →**, **Inicio** o **Fin** en el escenario, se 
 4. No hace falta Google Meet ni SDK para probar navegación, selector 1–12, videos y demo.
 
 En GitHub Pages, reemplazá `localhost:5173` por  
-`https://nahuelcz1.github.io/presentacion.ok/`.
+`https://puntook-presentacion.online/`.
 
 ---
 
@@ -70,21 +70,21 @@ Editá **`meet-config.js`**:
 
 ```javascript
 cloudProjectNumber: "123456789012",  // Número del proyecto GCP
-addOnOrigin: "https://nahuelcz1.github.io",
+addOnOrigin: "https://puntook-presentacion.online",
 ```
 
-Las URLs se calculan solas según la ruta (`/presentacion.ok/` en GitHub Pages).
+Las URLs se calculan solas según la ruta (raíz del dominio en producción).
 
 Editá **`deployment.json`** si cambiás dominio o rutas:
 
 ```json
-"sidePanelUrl": "https://nahuelcz1.github.io/presentacion.ok/meet/side-panel.html",
-"addOnOrigins": ["https://nahuelcz1.github.io"]
+"sidePanelUrl": "https://puntook-presentacion.online/meet/side-panel.html",
+"addOnOrigins": ["https://puntook-presentacion.online"]
 ```
 
 El escenario principal se abre con `startActivity({ mainStageUrl })` apuntando a:
 
-`https://nahuelcz1.github.io/presentacion.ok/meet/main-stage.html`
+`https://puntook-presentacion.online/meet/main-stage.html`
 
 ---
 
@@ -100,11 +100,11 @@ El escenario principal se abre con `startActivity({ mainStageUrl })` apuntando a
 ### 2. Publicar el sitio estático
 
 1. Subí este repositorio a GitHub Pages en  
-   `https://nahuelcz1.github.io/presentacion.ok/`
+   `https://puntook-presentacion.online/`
 2. Verificá que carguen:
-   - `/presentacion.ok/index.html`
-   - `/presentacion.ok/meet/main-stage.html`
-   - `/presentacion.ok/meet/side-panel.html`
+   - `/index.html`
+   - `/meet/main-stage.html`
+   - `/meet/side-panel.html`
 3. Los videos `.mp4` deben servirse con soporte **Range** (GitHub Pages lo permite; `serve.mjs` también).
 
 ### 3. Desplegar el add-on (HTTP / Cloud Deployment)
@@ -169,7 +169,7 @@ Comandos del panel: `goTo`, `next`, `prev`, `first`, `last`, `reset`, `replayAni
 - **No** se convierte a Google Slides; es la misma app HTML/CSS/JS.
 - El marcador (pincel) sigue disponible en la versión standalone; en Meet el control principal es el panel lateral.
 - `supportsScreenSharing: true` permite compartir pantalla del add-on además del escenario.
-- Para otro dominio que no sea `github.io`, actualizá `addOnOrigins` y las URLs en `deployment.json` y `meet-config.js`.
+- Para otro dominio, actualizá `addOnOrigins` y las URLs en `deployment.json` y `meet-config.js`.
 
 ---
 
