@@ -210,7 +210,7 @@
         }
       },
       async bootstrap() {
-        initSlideOptions(11);
+        initSlideOptions(12);
         const hasMeet = await bridge.initMeetClient((session) => session.createSidePanelClient());
         if (hasMeet) {
           this.setSidePanelClient(bridge.state.meetClient);

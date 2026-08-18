@@ -1,6 +1,6 @@
 # Punto Ok · Complemento privado de Google Meet
 
-Integración de la presentación HTML (11 diapositivas, animaciones, videos e interacciones) como **Google Meet Add-on** con:
+Integración de la presentación HTML (12 diapositivas, animaciones, videos e interacciones) como **Google Meet Add-on** con:
 
 - **Escenario principal:** la presentación visible para todos en la reunión.
 - **Panel lateral:** control del presentador (solo visible para quien comparte).
@@ -57,7 +57,7 @@ Cuando el presentador usa **← →**, **Inicio** o **Fin** en el escenario, se 
    - http://localhost:5173/meet/main-stage.html  
    - http://localhost:5173/meet/side-panel.html  
 3. El panel envía comandos por `BroadcastChannel("puntook-meet-controller")`.
-4. No hace falta Google Meet ni SDK para probar navegación, selector 1–11, videos y demo.
+4. No hace falta Google Meet ni SDK para probar navegación, selector 1–12, videos y demo.
 
 En GitHub Pages, reemplazá `localhost:5173` por  
 `https://nahuelcz1.github.io/presentacion.ok/`.
@@ -144,7 +144,7 @@ Payload JSON (versión `v: 1`):
 
 ```json
 { "v": 1, "type": "command", "command": "next" }
-{ "v": 1, "type": "state", "state": { "page": 3, "title": "Impacto", "total": 11 } }
+{ "v": 1, "type": "state", "state": { "page": 3, "title": "Impacto", "total": 12 } }
 ```
 
 Comandos del panel: `goTo`, `next`, `prev`, `first`, `last`, `reset`, `replayAnimation`, `toggleVideo`, `openDemo`, `requestState`.
@@ -155,7 +155,7 @@ Comandos del panel: `goTo`, `next`, `prev`, `first`, `last`, `reset`, `replayAni
 
 - Página actual y título  
 - Anterior / Siguiente  
-- Selector de páginas 1–11  
+- Selector de páginas 1–12  
 - Primera / Última  
 - Reiniciar presentación  
 - Repetir animación de la slide actual  
