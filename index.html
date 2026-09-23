@@ -51,7 +51,7 @@
   </div>
 
   <!-- PROGRESS -->
-  <div class="progress" role="progressbar" id="progress" aria-valuemin="1" aria-valuemax="12" aria-valuenow="1" aria-label="Progreso de la presentación"><div class="progress__bar" id="progressBar"></div></div>
+  <div class="progress" role="progressbar" id="progress" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1" aria-label="Progreso de la presentación"><div class="progress__bar" id="progressBar"></div></div>
 
   <!-- DECK -->
   <main class="deck" id="deck" aria-roledescription="presentación">
@@ -90,36 +90,65 @@
       </div>
     </section>
 
-    <!-- 2 · PROBLEMA / INFORMACIÓN DISPERSA -->
-    <section class="slide slide--split slide--dispersa" data-title="El problema" id="slideDispersa">
-      <div class="hero-glow hero-glow--soft" aria-hidden="true"></div>
-      <div class="hero-grid hero-grid--copy">
-        <div class="hero-copy">
-          <span class="kicker anim" data-anim="1">El punto de partida</span>
-          <h2 class="headline anim" data-anim="2">Gestionar RR.HH no debería depender de <span class="accent">planillas, papeles y mensajes sueltos</span></h2>
-          <p class="lead lead--2 anim" data-anim="3">Muchas empresas todavía manejan asistencia, turnos, cierres<br>salariales y reportes de forma manual o dispersa.</p>
-          <div class="callout callout--warn anim" data-anim="4">
-            <span class="callout__dot"></span>
-            <p><strong>Resultado:</strong> más errores, más tiempo perdido y menos control.</p>
+    <!-- 2 · CLIENTES / EMPRESAS -->
+    <section class="slide slide--clients" data-title="Clientes">
+      <div class="s-inner s-inner--wide">
+        <div class="clients-wrap">
+          <p class="kicker anim" data-anim="1">Clientes</p>
+          <h2 class="headline anim" data-anim="2">Empresas que ya confían en <span class="accent">Punto Ok</span></h2>
+          <div class="clients-header anim" data-anim="3">
+            <div class="clients-header__spacer" aria-hidden="true"></div>
+            <div class="rubros">
+              <button type="button" class="rubros__pill">Industria</button>
+              <button type="button" class="rubros__pill">Comercio</button>
+              <button type="button" class="rubros__pill">Servicios</button>
+              <button type="button" class="rubros__pill">Logística</button>
+              <button type="button" class="rubros__pill">Agro</button>
+              <button type="button" class="rubros__pill">Retail</button>
+            </div>
           </div>
-        </div>
-        <div class="hero-visual anim" data-anim="3">
-          <div class="chaos-wrap" id="chaosWrap">
-            <div class="chaos-scene" aria-hidden="true">
-              <div class="chaos-piece chaos-piece--planilla">
-                <img src="caos/1.png" alt="" class="chaos-piece__img" width="800" height="600" decoding="async" />
-              </div>
-              <div class="chaos-piece chaos-piece--papel">
-                <img src="caos/2.png" alt="" class="chaos-piece__img" width="600" height="600" decoding="async" />
-              </div>
-              <div class="chaos-piece chaos-piece--mensajes">
-                <img src="caos/3.png" alt="" class="chaos-piece__img" width="600" height="600" decoding="async" />
-              </div>
-              <div class="chaos-piece chaos-piece--alertas">
-                <img src="caos/5.png" alt="" class="chaos-piece__img" width="500" height="400" decoding="async" />
-              </div>
-              <div class="chaos-piece chaos-piece--cafe">
-                <img src="caos/4.png" alt="" class="chaos-piece__img" width="300" height="300" decoding="async" />
+          <div class="clients anim" data-anim="4">
+            <div class="bignum">
+              <img class="bignum__img" src="400empresas2.png" alt="+400 empresas confían en Punto Ok" />
+            </div>
+            <div class="logos-shell">
+              <div class="logos-viewport" tabindex="0" aria-label="Logos de clientes, arrastrá horizontalmente para ver más">
+                <div class="logos-track">
+                  <div class="lbox"><img src="logos/agrofertil.png" alt="Agrofértil" /></div>
+                  <div class="lbox"><img src="logos/agroalianza.png" alt="AgroAlianza" /></div>
+                  <div class="lbox"><img src="logos/js-comercial.png" alt="JS Comercial" /></div>
+                  <div class="lbox"><img src="logos/inacon.png" alt="Inacon" /></div>
+                  <div class="lbox"><img src="logos/sideagro.png" alt="SiderAgro" /></div>
+                  <div class="lbox"><img src="logos/upe.png" alt="UPE" /></div>
+                  <div class="lbox"><img src="logos/moracue.png" alt="Mora Cué" /></div>
+                  <div class="lbox"><img src="logos/BCN.png" alt="BCN" /></div>
+                  <div class="lbox"><img src="logos/avalos-y-asociados.png" alt="Avalos &amp; Asoc." /></div>
+                  <div class="lbox"><img src="logos/black-sa.png" alt="Black S.A." /></div>
+                  <div class="lbox"><img src="logos/talleyrand.png" alt="Talleyrand" /></div>
+                  <div class="lbox"><img src="logos/GARIBALDI.png" alt="Garibaldi" /></div>
+                  <div class="lbox"><img src="logos/agregado-1.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-2.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-3.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-4.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-5.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-6.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-7.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-8.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-9.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-10.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-11.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-12.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-13.png" alt="South Atlantic Company" /></div>
+                  <div class="lbox"><img src="logos/agregado-14.png" alt="BBK" /></div>
+                  <div class="lbox"><img src="logos/agregado-15.png" alt="El Almacén" /></div>
+                  <div class="lbox"><img src="logos/agregado-16.png" alt="Central de Abasto Alto Paraná" /></div>
+                  <div class="lbox"><img src="logos/agregado-17.png" alt="Santa Teresa" /></div>
+                  <div class="lbox"><img src="logos/agregado-18.png" alt="Chipería Leticia" /></div>
+                  <div class="lbox"><img src="logos/agregado-19.png" alt="Globoaves" /></div>
+                  <div class="lbox"><img src="logos/agregado-20.png" alt="LDR Lider Truck" /></div>
+                  <div class="lbox"><img src="logos/agregado-21.png" alt="Cliente" /></div>
+                  <div class="lbox"><img src="logos/agregado-22.png" alt="Cliente" /></div>
+                </div>
               </div>
             </div>
           </div>
@@ -127,89 +156,7 @@
       </div>
     </section>
 
-    <!-- 3 · IMPACTO -->
-    <section class="slide slide--center slide--impact" data-title="Impacto" id="slideImpact">
-      <div class="s-inner s-inner--impact">
-        <h2 class="headline center anim" data-anim="1">El problema no es solo administrativo.<br><span class="accent">Es operativo y financiero.</span></h2>
-        <div class="impact-wrap" id="impactWrap">
-          <svg class="impact-links" id="impactLinkSvg" aria-hidden="true">
-            <defs>
-              <linearGradient id="impactLinkGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#0071e3" />
-                <stop offset="50%" stop-color="#00dfea" />
-                <stop offset="100%" stop-color="#2997ff" />
-              </linearGradient>
-            </defs>
-            <path class="impact-links__path" id="impactLinkPath" pathLength="1" />
-          </svg>
-          <div class="trio trio--center impact-trio">
-            <button type="button" class="tile impact-card impact-card--time anim" data-anim="2" data-impact-card="tiempo" aria-pressed="false">
-              <div class="impact-card__base">
-                <div class="tile__ico tile__ico--img"><img src="tiempo.png" alt="" /></div>
-                <h3>Tiempo</h3>
-                <p>Cierres más lentos y tareas repetitivas.</p>
-              </div>
-              <div class="impact-scene impact-scene--time" aria-hidden="true">
-                <div class="impact-time-visual">
-                  <div class="impact-clock" aria-hidden="true">
-                    <span class="impact-clock__hand impact-clock__hand--h"></span>
-                    <span class="impact-clock__hand impact-clock__hand--m"></span>
-                    <span class="impact-clock__center"></span>
-                  </div>
-                  <ul class="impact-tasks">
-                    <li>Cierre manual</li>
-                    <li>Planilla Excel</li>
-                    <li>Rechequeo de datos</li>
-                    <li>Reenvío de reportes</li>
-                  </ul>
-                </div>
-              </div>
-            </button>
-            <button type="button" class="tile impact-card impact-card--control anim" data-anim="3" data-impact-card="control" aria-pressed="false">
-              <div class="impact-card__base">
-                <div class="tile__ico tile__ico--img"><img src="control.png" alt="" /></div>
-                <h3>Control</h3>
-                <p>Marcaciones incompletas y poca visibilidad.</p>
-              </div>
-              <div class="impact-scene impact-scene--control" aria-hidden="true">
-                <div class="impact-panel">
-                  <div class="impact-panel__head">Sin respuesta clara</div>
-                  <div class="impact-panel__row"><span class="impact-panel__dot impact-panel__dot--warn"></span> ¿Cuándo marcó?</div>
-                  <div class="impact-panel__row"><span class="impact-panel__dot impact-panel__dot--warn"></span> ¿Ya llegó?</div>
-                  <div class="impact-panel__row"><span class="impact-panel__dot impact-panel__dot--warn"></span> ¿Ausente?</div>
-                </div>
-              </div>
-            </button>
-            <button type="button" class="tile impact-card impact-card--money anim" data-anim="4" data-impact-card="dinero" aria-pressed="false">
-              <div class="impact-card__base">
-                <div class="tile__ico tile__ico--img"><img src="dinero.png" alt="" /></div>
-                <h3>Dinero</h3>
-                <p>Errores, horas extras mal calculadas y costos ocultos.</p>
-              </div>
-              <div class="impact-scene impact-scene--money" aria-hidden="true">
-                <div class="impact-slip impact-slip--bad">
-                  <span class="impact-slip__tag">Liquidación</span>
-                  <div class="impact-slip__row"><span>Horas extras</span><span class="impact-slip__bad" aria-hidden="true">✕</span></div>
-                  <div class="impact-slip__row"><span>Bonificaciones</span><span class="impact-slip__bad" aria-hidden="true">✕</span></div>
-                  <div class="impact-slip__row"><span>Descuentos</span><span class="impact-slip__bad" aria-hidden="true">✕</span></div>
-                  <div class="impact-slip__sum impact-slip__sum--wrong" aria-hidden="true">
-                    <span class="impact-slip__sum-line">₲ 4.200.000 + ₲ 850.000 − ₲ 120.000</span>
-                    <span class="impact-slip__sum-eq">= <s>₲ 12.450.000</s> <strong>₲ 4.930.000</strong></span>
-                  </div>
-                  <div class="impact-slip__total impact-slip__total--wrong"><span>Total neto</span><strong>₲ 12.450.000</strong></div>
-                </div>
-              </div>
-            </button>
-          </div>
-          <p class="impact-payoff" id="impactPayoff" role="status" aria-live="polite">
-            Cuando toda la gestión está conectada, <span class="accent">toda la empresa funciona mejor.</span>
-          </p>
-        </div>
-        <div class="dual-note anim" data-anim="5" id="impactDualNote"><span class="down">↓ Menor productividad</span><span class="up">↑ Mayores costos</span></div>
-      </div>
-    </section>
-
-    <!-- 4 · ECOSISTEMA -->
+    <!-- 3 · ECOSISTEMA -->
     <section class="slide slide--center slide--eco" data-title="Ecosistema" id="slideEco">
       <div class="s-inner s-inner--eco">
         <span class="kicker center anim" data-anim="1">La solución</span>
@@ -277,7 +224,7 @@
       </div>
     </section>
 
-    <!-- 5 · DOS FORMAS DE MARCAR -->
+    <!-- 4 · DOS FORMAS DE MARCAR -->
     <section class="slide slide--center slide--soft" data-title="Formas de marcar" id="slideMark">
       <div class="s-inner">
         <h2 class="headline center anim" data-anim="1">Una solución, <span class="accent">dos formas de marcar</span></h2>
@@ -339,7 +286,7 @@
       </div>
     </section>
 
-    <!-- 6 · FUNCIONALIDADES -->
+    <!-- 5 · FUNCIONALIDADES -->
     <section class="slide slide--center" data-title="Funcionalidades" id="slideFeatures">
       <div class="s-inner s-inner--feat">
         <div class="feat-main">
@@ -379,7 +326,7 @@
       </div>
     </section>
 
-    <!-- 7 · GEOLOCALIZACIÓN E HISTORIAL -->
+    <!-- 6 · GEOLOCALIZACIÓN E HISTORIAL -->
     <section class="slide slide--center slide--trace" data-title="Geolocalización" id="slideTraceability" aria-label="Geolocalización">
       <div class="s-inner s-inner--trace">
         <span class="kicker center anim" data-anim="1">Trazabilidad en tiempo real</span>
@@ -536,7 +483,7 @@
       </div>
     </section>
 
-    <!-- 8 · PLATAFORMA / MODULOS -->
+    <!-- 7 · PLATAFORMA / MODULOS -->
     <section class="slide slide--platform" data-title="Plataforma">
       <div class="s-inner s-inner--platform">
         <div class="platform-grid">
@@ -578,7 +525,7 @@
       </div>
     </section>
 
-    <!-- 9 · DEMO -->
+    <!-- 8 · DEMO -->
     <section class="slide slide--center slide--soft" data-title="Demo">
       <div class="s-inner">
         <div class="demo-play anim" data-anim="1">
@@ -592,73 +539,7 @@
       </div>
     </section>
 
-    <!-- 10 · CLIENTES -->
-    <section class="slide slide--clients" data-title="Clientes">
-      <div class="s-inner s-inner--wide">
-        <div class="clients-wrap">
-          <p class="kicker anim" data-anim="1">Clientes</p>
-          <h2 class="headline anim" data-anim="2">Empresas que ya confían en <span class="accent">Punto Ok</span></h2>
-          <div class="clients-header anim" data-anim="3">
-            <div class="clients-header__spacer" aria-hidden="true"></div>
-            <div class="rubros">
-              <button type="button" class="rubros__pill">Industria</button>
-              <button type="button" class="rubros__pill">Comercio</button>
-              <button type="button" class="rubros__pill">Servicios</button>
-              <button type="button" class="rubros__pill">Logística</button>
-              <button type="button" class="rubros__pill">Agro</button>
-              <button type="button" class="rubros__pill">Retail</button>
-            </div>
-          </div>
-          <div class="clients anim" data-anim="4">
-            <div class="bignum">
-              <img class="bignum__img" src="400empresas2.png" alt="+400 empresas confían en Punto Ok" />
-            </div>
-            <div class="logos-shell">
-              <div class="logos-viewport" tabindex="0" aria-label="Logos de clientes, arrastrá horizontalmente para ver más">
-                <div class="logos-track">
-                  <div class="lbox"><img src="logos/agrofertil.png" alt="Agrofértil" /></div>
-                  <div class="lbox"><img src="logos/agroalianza.png" alt="AgroAlianza" /></div>
-                  <div class="lbox"><img src="logos/js-comercial.png" alt="JS Comercial" /></div>
-                  <div class="lbox"><img src="logos/inacon.png" alt="Inacon" /></div>
-                  <div class="lbox"><img src="logos/sideagro.png" alt="SiderAgro" /></div>
-                  <div class="lbox"><img src="logos/upe.png" alt="UPE" /></div>
-                  <div class="lbox"><img src="logos/moracue.png" alt="Mora Cué" /></div>
-                  <div class="lbox"><img src="logos/BCN.png" alt="BCN" /></div>
-                  <div class="lbox"><img src="logos/avalos-y-asociados.png" alt="Avalos &amp; Asoc." /></div>
-                  <div class="lbox"><img src="logos/black-sa.png" alt="Black S.A." /></div>
-                  <div class="lbox"><img src="logos/talleyrand.png" alt="Talleyrand" /></div>
-                  <div class="lbox"><img src="logos/GARIBALDI.png" alt="Garibaldi" /></div>
-                  <div class="lbox"><img src="logos/agregado-1.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-2.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-3.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-4.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-5.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-6.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-7.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-8.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-9.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-10.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-11.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-12.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-13.png" alt="South Atlantic Company" /></div>
-                  <div class="lbox"><img src="logos/agregado-14.png" alt="BBK" /></div>
-                  <div class="lbox"><img src="logos/agregado-15.png" alt="El Almacén" /></div>
-                  <div class="lbox"><img src="logos/agregado-16.png" alt="Central de Abasto Alto Paraná" /></div>
-                  <div class="lbox"><img src="logos/agregado-17.png" alt="Santa Teresa" /></div>
-                  <div class="lbox"><img src="logos/agregado-18.png" alt="Chipería Leticia" /></div>
-                  <div class="lbox"><img src="logos/agregado-19.png" alt="Globoaves" /></div>
-                  <div class="lbox"><img src="logos/agregado-20.png" alt="LDR Lider Truck" /></div>
-                  <div class="lbox"><img src="logos/agregado-21.png" alt="Cliente" /></div>
-                  <div class="lbox"><img src="logos/agregado-22.png" alt="Cliente" /></div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 11 · IMPLEMENTACIÓN GUIADA -->
+    <!-- 9 · IMPLEMENTACIÓN GUIADA -->
     <section class="slide slide--center slide--impl" data-title="Implementación" id="slideImplementation" aria-label="Implementación">
       <div class="s-inner s-inner--impl">
         <span class="kicker center anim" data-anim="1">Implementación guiada</span>
@@ -727,7 +608,7 @@
       </div>
     </section>
 
-    <!-- 12 · SOPORTE -->
+    <!-- 10 · SOPORTE -->
     <section class="slide slide--dark slide--center slide--support" data-title="Soporte" id="slideSupport">
       <div class="support-bg" aria-hidden="true">
         <video class="support-bg__video" id="supportBgVideo" src="video-bg-pag11.mp4" playsinline muted loop preload="metadata"></video>
@@ -760,7 +641,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4L16.5 3.5z"/><path d="M14 6l4 4"/></svg>
   </button>
   <nav class="dots" id="dots" aria-label="Navegación de diapositivas"></nav>
-  <div class="counter" id="counter" aria-hidden="true">1 / 12</div>
+  <div class="counter" id="counter" aria-hidden="true">1 / 10</div>
 
   <div class="presenter-toast" id="presenterToast" role="status" aria-live="polite" hidden></div>
 

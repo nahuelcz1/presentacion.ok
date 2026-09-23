@@ -46,7 +46,7 @@
 
   function getRemoteState() {
     const d = deck();
-    const state = d?.getState?.() || { page: 1, title: "", total: 12 };
+    const state = d?.getState?.() || { page: 1, title: "", total: 10 };
     const markOpen = d?.getMarkVideoState?.() || { v1: false, v2: false };
     return {
       page: state.page,
