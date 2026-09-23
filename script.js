@@ -110,7 +110,16 @@
   const supportBgVideo = document.getElementById("supportBgVideo");
   const implSlide = document.getElementById("slideImplementation");
   const implTimeline = document.getElementById("implTimeline");
+  const implHeroPhotoTrack = document.querySelector("#implHeroPhoto .impl-hero__photo-track");
+  const implHeroName = document.getElementById("implHeroName");
+  const implHeroPicker = document.getElementById("implHeroPicker");
+  const implHeroPickerList = document.getElementById("implHeroPickerList");
+  const implHeroPhotoOpen = document.getElementById("implHeroPhotoOpen");
+  let implPhotoRealCount = 0;
   let implTlTimer = null;
+  let implPhotoIndex = 0;
+  let implPhotoPickerBound = false;
+  const IMPL_HERO_PHOTO_STORAGE = "implHeroPhotoIndex";
   const traceSlide = document.getElementById("slideTraceability");
   const tracePanel = document.getElementById("tracePanel");
   const traceMap = document.getElementById("traceMap");
@@ -273,6 +282,7 @@
     }
     syncSupportBgVideo();
     syncImplTimeline();
+    syncImplHeroPhoto(false);
     syncTraceSlide();
     syncHeroIntro();
     const slideChanged = lastRenderedSlide !== current;
@@ -287,6 +297,7 @@
     }
     if (slideChanged && slides[current] === implSlide) {
       playImplTimeline();
+      syncImplHeroPhoto(true);
     }
     if (slideChanged && slides[current] === traceSlide) {
       playTraceSlide();
@@ -378,6 +389,150 @@
   function syncImplTimeline() {
     if (!implSlide || !implTimeline) return;
     if (slides[current] !== implSlide) resetImplTimeline();
+  }
+
+  function getImplHeroPhotoSlides() {
+    if (!implHeroPhotoTrack) return [];
+    return Array.from(implHeroPhotoTrack.querySelectorAll(":scope > .impl-hero__photo-slide"));
+  }
+
+  function cleanupImplHeroPhotoClone() {
+    if (!implHeroPhotoTrack) return;
+    implHeroPhotoTrack.querySelector(".impl-hero__photo-slide--clone")?.remove();
+    delete implHeroPhotoTrack.dataset.loopReady;
+    delete implHeroPhotoTrack.dataset.realCount;
+  }
+
+  function readImplHeroPhotoSavedIndex() {
+    try {
+      const n = parseInt(sessionStorage.getItem(IMPL_HERO_PHOTO_STORAGE) || "0", 10);
+      return Number.isFinite(n) ? n : 0;
+    } catch (_) {
+      return 0;
+    }
+  }
+
+  function updateImplHeroBadge() {
+    if (!implHeroName) return;
+    const slideEls = getImplHeroPhotoSlides();
+    if (!slideEls.length) return;
+    const idx = Math.max(0, Math.min(implPhotoIndex, slideEls.length - 1));
+    implHeroName.textContent = slideEls[idx]?.dataset.name || "";
+  }
+
+  function updateImplHeroPickerUI() {
+    if (!implHeroPickerList) return;
+    implHeroPickerList.querySelectorAll(".impl-hero__picker-opt").forEach((btn) => {
+      const i = parseInt(btn.dataset.index || "0", 10);
+      const active = i === implPhotoIndex;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-selected", active ? "true" : "false");
+    });
+  }
+
+  function setImplHeroPhotoIndex(index, instant) {
+    if (!implHeroPhotoTrack) return;
+    const slideEls = getImplHeroPhotoSlides();
+    const count = slideEls.length;
+    if (!count) return;
+    implPhotoRealCount = count;
+    const idx = Math.max(0, Math.min(index, count - 1));
+    implPhotoIndex = idx;
+    if (instant) implHeroPhotoTrack.classList.add("is-instant");
+    implHeroPhotoTrack.style.transform = "translate3d(-" + idx * 100 + "%, 0, 0)";
+    if (instant) {
+      void implHeroPhotoTrack.offsetWidth;
+      implHeroPhotoTrack.classList.remove("is-instant");
+    }
+    updateImplHeroBadge();
+    updateImplHeroPickerUI();
+    try {
+      sessionStorage.setItem(IMPL_HERO_PHOTO_STORAGE, String(idx));
+    } catch (_) {}
+  }
+
+  function openImplHeroPicker() {
+    if (!implHeroPicker || !implHeroPhotoOpen) return;
+    implHeroPicker.classList.add("is-open");
+    implHeroPicker.setAttribute("aria-hidden", "false");
+    implHeroPhotoOpen.setAttribute("aria-expanded", "true");
+  }
+
+  function closeImplHeroPicker() {
+    if (!implHeroPicker || !implHeroPhotoOpen) return;
+    implHeroPicker.classList.remove("is-open");
+    implHeroPicker.setAttribute("aria-hidden", "true");
+    implHeroPhotoOpen.setAttribute("aria-expanded", "false");
+  }
+
+  function toggleImplHeroPicker() {
+    if (!implHeroPicker) return;
+    if (implHeroPicker.classList.contains("is-open")) closeImplHeroPicker();
+    else openImplHeroPicker();
+  }
+
+  function bindImplHeroPhotoPicker() {
+    if (implPhotoPickerBound || !implHeroPickerList || !implHeroPhotoOpen) return;
+    cleanupImplHeroPhotoClone();
+    const slideEls = getImplHeroPhotoSlides();
+    if (!slideEls.length) return;
+    implPhotoRealCount = slideEls.length;
+    implHeroPickerList.innerHTML = "";
+    slideEls.forEach((slide, i) => {
+      const name = slide.dataset.name || "";
+      const img = slide.querySelector("img");
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "impl-hero__picker-opt";
+      btn.dataset.index = String(i);
+      btn.setAttribute("role", "option");
+      if (img) {
+        const thumb = img.cloneNode(true);
+        thumb.setAttribute("width", "44");
+        thumb.setAttribute("height", "44");
+        thumb.setAttribute("loading", "lazy");
+        btn.appendChild(thumb);
+      }
+      const label = document.createElement("span");
+      label.textContent = name;
+      btn.appendChild(label);
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        setImplHeroPhotoIndex(i, false);
+        closeImplHeroPicker();
+      });
+      implHeroPickerList.appendChild(btn);
+    });
+    implHeroPhotoOpen.addEventListener("click", (e) => {
+      e.stopPropagation();
+      toggleImplHeroPicker();
+    });
+    document.addEventListener("click", (e) => {
+      if (!implHeroPicker?.classList.contains("is-open")) return;
+      if (slides[current] !== implSlide) return;
+      const person = implHeroPhotoOpen.closest(".impl-hero__person");
+      if (person && !person.contains(e.target)) closeImplHeroPicker();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") closeImplHeroPicker();
+    });
+    implPhotoPickerBound = true;
+    const saved = readImplHeroPhotoSavedIndex();
+    setImplHeroPhotoIndex(saved, true);
+  }
+
+  function stopImplHeroPhoto() {
+    closeImplHeroPicker();
+  }
+
+  function syncImplHeroPhoto(restart) {
+    bindImplHeroPhotoPicker();
+    if (!implHeroPhotoTrack || implPhotoRealCount < 1) return;
+    if (slides[current] !== implSlide) {
+      stopImplHeroPhoto();
+      return;
+    }
+    if (restart) setImplHeroPhotoIndex(implPhotoIndex, true);
   }
 
   function tracePrefersReducedMotion() {
@@ -2262,7 +2417,10 @@
       });
       render();
     });
-    if (slide === implSlide) playImplTimeline();
+    if (slide === implSlide) {
+      playImplTimeline();
+      syncImplHeroPhoto(true);
+    }
     if (slide === traceSlide) playTraceSlide();
   }
 

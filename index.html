@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
-  <link rel="stylesheet" href="styles.css?v=153" />
+  <link rel="stylesheet" href="styles.css?v=164" />
 </head>
 <body>
   <a class="skip-link" href="#deck">Saltar a la presentación</a>
@@ -542,11 +542,44 @@
     <!-- 9 · IMPLEMENTACIÓN GUIADA -->
     <section class="slide slide--center slide--impl" data-title="Implementación" id="slideImplementation" aria-label="Implementación">
       <div class="s-inner s-inner--impl">
-        <span class="kicker center anim" data-anim="1">Implementación guiada</span>
-        <h2 class="headline center anim" data-anim="2">De la configuración al <span class="accent">primer día</span></h2>
-        <p class="lead center anim" data-anim="3">Te acompañamos paso a paso para poner Punto OK en funcionamiento.</p>
+        <header class="impl-hero anim" data-anim="1">
+          <div class="impl-hero__copy">
+            <span class="impl-hero__kicker">Implementación guiada</span>
+            <h2 class="impl-hero__title">
+              <span class="impl-hero__line">Acompañamiento dedicado para usted,</span>
+              <span class="impl-hero__line impl-hero__line--accent">su equipo y su empresa.</span>
+            </h2>
+          </div>
+          <figure class="impl-hero__person">
+            <div class="impl-hero__picker" id="implHeroPicker" aria-hidden="true">
+              <div class="impl-hero__picker-panel">
+                <p class="impl-hero__picker-title">Elegir consultora</p>
+                <div class="impl-hero__picker-list" id="implHeroPickerList" role="listbox" aria-label="Consultoras de implementación"></div>
+              </div>
+            </div>
+            <div class="impl-hero__photo-ring" aria-hidden="true"></div>
+            <div class="impl-hero__photo" id="implHeroPhoto">
+              <div class="impl-hero__photo-track">
+                <div class="impl-hero__photo-slide" data-name="Avril Urunaga">
+                  <img src="foto%20per%20-%20Avril%20Urunaga.jpg" alt="Avril Urunaga" width="400" height="400" decoding="async" />
+                </div>
+                <div class="impl-hero__photo-slide" data-name="Florencia Agüero">
+                  <img src="foto%20per%202%20-%20Florencia%20Ag%C3%BCero%20.jpg" alt="Florencia Agüero" width="400" height="400" decoding="async" />
+                </div>
+                <div class="impl-hero__photo-slide" data-name="Kamille Frutos">
+                  <img src="foto%20per%203%20-%20Kamille%20Frutos%20.jpg" alt="Kamille Frutos" width="400" height="400" decoding="async" />
+                </div>
+              </div>
+            </div>
+            <button type="button" class="impl-hero__photo-open" id="implHeroPhotoOpen" aria-label="Elegir consultora" aria-expanded="false" aria-controls="implHeroPicker"></button>
+            <figcaption class="impl-hero__badge">
+              <strong id="implHeroName">Avril Urunaga</strong>
+              <span>Consultora de Implementación</span>
+            </figcaption>
+          </figure>
+        </header>
 
-        <div class="impl-tl" id="implTimeline" aria-label="Proceso de implementación en 4 etapas">
+        <div class="impl-tl anim" data-anim="2" id="implTimeline" aria-label="Proceso de implementación en 4 etapas">
           <div class="impl-tl__rail" aria-hidden="true">
             <div class="impl-tl__track"></div>
             <div class="impl-tl__fill"></div>
@@ -689,7 +722,7 @@
   <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="script.js?v=112"></script>
+  <script src="script.js?v=118"></script>
   <script src="presenter-remote-mini.js?v=4"></script>
   <script src="presenter-bridge.js?v=4"></script>
 </body>
