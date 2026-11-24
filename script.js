@@ -120,6 +120,60 @@
   let implPhotoIndex = 0;
   let implPhotoPickerBound = false;
   const IMPL_HERO_PHOTO_STORAGE = "implHeroPhotoIndex";
+  const neuralSlide = document.getElementById("slideNeural");
+  const neuralStage = document.getElementById("neuralStage");
+  const neuralCanvas = document.getElementById("neuralCanvas");
+  const neuralCtx = neuralCanvas ? neuralCanvas.getContext("2d") : null;
+  const NEURAL_VIEW_W = 1000;
+  const NEURAL_VIEW_H = 620;
+  const NEURAL_RX = 438;
+  const NEURAL_RY = 258;
+  const NEURAL_CHIP = 32;
+  const NEURAL_HOVER_PX = 90;
+  const NEURAL_MAX_SIGNALS = 32;
+  const NEURAL_NET_VERSION = 5;
+  const NEURAL_DIRS = [
+    [1, 0], [Math.SQRT1_2, Math.SQRT1_2], [0, 1], [-Math.SQRT1_2, Math.SQRT1_2],
+    [-1, 0], [-Math.SQRT1_2, -Math.SQRT1_2], [0, -1], [Math.SQRT1_2, -Math.SQRT1_2],
+  ];
+  // Módulos del producto (viewBox 24×24, trazo) en el borde del circuito
+  const NEURAL_ICONS = [
+    { path: "M3 21h18 M3 7h18l-2-4H5z M3 7v1a3 3 0 0 0 6 0V7 M9 8a3 3 0 0 0 6 0V7 M15 8a3 3 0 0 0 6 0V7 M5 21V11 M19 21V11 M9 21v-4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v4", label: "Empresa" },
+    { path: "M9 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8z M3 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2 M16 3.13a4 4 0 0 1 0 7.75 M21 21v-2a4 4 0 0 0-3-3.85", label: "Colaboradores" },
+    { path: "M11.8 21H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v4 M18 14a4 4 0 1 0 0 8a4 4 0 1 0 0-8z M15 3v4 M7 3v4 M3 11h16 M18 16.5V18l1 1", label: "Turnos" },
+    { path: "M20 11A8.1 8.1 0 0 0 4.5 9 M4 5v4h4 M4 13a8.1 8.1 0 0 0 15.5 2 M20 19v-4h-4", label: "Movimientos" },
+    { path: "M4 8V6a2 2 0 0 1 2-2h2 M4 16v2a2 2 0 0 0 2 2h2 M16 4h2a2 2 0 0 1 2 2v2 M16 20h2a2 2 0 0 0 2-2v-2 M9 10h.01 M15 10h.01 M9.5 15a3.5 3.5 0 0 0 5 0", label: "Asistencia" },
+    { path: "M17.55 16.75a7.5 7.5 0 0 0-10.6 0 M18 3.8a6 6 0 0 0-8.2 2.2l10.4 6a6 6 0 0 0-2.2-8.2z M15 9l-3 5.2 M3 19.25a2.4 2.4 0 0 1 3 .75a2.4 2.4 0 0 0 4 0a2.4 2.4 0 0 1 4 0a2.4 2.4 0 0 0 4 0a2.4 2.4 0 0 1 3-.75", label: "Vacaciones" },
+    { path: "M12 3a9 9 0 1 0 0 18a9 9 0 1 0 0-18z M14.8 9A2 2 0 0 0 13 8h-2a2 2 0 0 0 0 4h2a2 2 0 0 1 0 4h-2a2 2 0 0 1-1.8-1 M12 6v2 M12 16v2", label: "Pagos" },
+    { path: "M3 5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z M3 9h18 M3 13h18 M3 17h18 M9 9v12", label: "Planilla Nominal" },
+    { path: "M10 3.2A9 9 0 1 0 20.8 14a1 1 0 0 0-1-1H13a2 2 0 0 1-2-2V4a.9.9 0 0 0-1-.8z M15 3.5A9 9 0 0 1 20.5 9H16a1 1 0 0 1-1-1z", label: "Reportes" },
+    { path: "M12 3a4 4 0 1 0 0 8a4 4 0 1 0 0-8z M6 21v-2a4 4 0 0 1 4-4h4 M16 19h6 M19 16v6", label: "Reclutamiento", badge: "NOVEDADES" },
+    { path: "M6 4h12a3 3 0 0 1 3 3v10a3 3 0 0 1-3 3H6a3 3 0 0 1-3-3V7a3 3 0 0 1 3-3z M9 8a2 2 0 1 0 0 4a2 2 0 1 0 0-4z M15 8h2 M15 12h2 M7 16h10", label: "Hub de Talentos" },
+    { path: "M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3H4a4 4 0 0 0 2-3v-3a7 7 0 0 1 4-6 M9 17v1a3 3 0 0 0 6 0v-1", label: "Notificaciones" },
+    { path: "M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2 M7 9l5-5l5 5 M12 4v12", label: "Importaciones" },
+    { path: "M5 4h4l3 3h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z", label: "Documentos" },
+    { path: "M5 7h14a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2z M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2 M12 12v.01 M3 13a20 20 0 0 0 18 0", label: "Cargos y Salarios" },
+    { path: "M10 3a7 7 0 1 0 0 14a7 7 0 1 0 0-14z M21 21l-6-6", label: "Auditoría" },
+  ];
+  let neuralNetBuiltVersion = 0;
+  let neuralTraces = [];
+  let neuralIcons = [];
+  let neuralSignals = [];
+  let neuralBase = null;
+  let neuralBaseKey = "";
+  let neuralRunning = false;
+  let neuralRAF = null;
+  let neuralLastTs = 0;
+  let neuralSignalAcc = 0;
+  let neuralRevealStart = 0;
+  let neuralW = 0;
+  let neuralH = 0;
+  let neuralDPR = 1;
+  let neuralScale = 1;
+  let neuralCX = 0;
+  let neuralCY = 0;
+  const neuralMouse = { x: 0, y: 0, active: false };
+  const casesSlide = document.getElementById("slideCases");
   const traceSlide = document.getElementById("slideTraceability");
   const tracePanel = document.getElementById("tracePanel");
   const traceMap = document.getElementById("traceMap");
@@ -283,6 +337,7 @@
     syncSupportBgVideo();
     syncImplTimeline();
     syncImplHeroPhoto(false);
+    syncNeuralSlide(false);
     syncTraceSlide();
     syncHeroIntro();
     const slideChanged = lastRenderedSlide !== current;
@@ -299,6 +354,13 @@
       playImplTimeline();
       syncImplHeroPhoto(true);
     }
+    if (slideChanged && slides[current] === neuralSlide) {
+      syncNeuralSlide(true);
+    }
+    if (slideChanged && casesSlide && slides[current] === casesSlide) {
+      playCasePanel(casesSlide.querySelector(".case-panel.is-active"));
+    }
+    if (casesSlide && slides[current] !== casesSlide) stopCaseAuto();
     if (slideChanged && slides[current] === traceSlide) {
       playTraceSlide();
     }
@@ -533,6 +595,591 @@
       return;
     }
     if (restart) setImplHeroPhotoIndex(implPhotoIndex, true);
+  }
+
+  // ---------- Red neuronal interactiva · slide "Tecnología" ----------
+  function neuralPrefersReducedMotion() {
+    return implPrefersReducedMotion();
+  }
+
+  function neuralRandom(seed) {
+    let a = seed >>> 0;
+    return function () {
+      a = (a + 0x6d2b79f5) >>> 0;
+      let t = a;
+      t = Math.imul(t ^ (t >>> 15), t | 1);
+      t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+
+  function neuralEllipseNorm(x, y) {
+    return Math.hypot(x / NEURAL_RX, y / NEURAL_RY);
+  }
+
+  function neuralDirToward(dx, dy) {
+    const a = Math.atan2(dy, dx);
+    return ((Math.round(a / (Math.PI / 4)) % 8) + 8) % 8;
+  }
+
+  function neuralOutward(d, x, y) {
+    const gx = x / (NEURAL_RX * NEURAL_RX);
+    const gy = y / (NEURAL_RY * NEURAL_RY);
+    const gl = Math.hypot(gx, gy) || 1;
+    return NEURAL_DIRS[d][0] * (gx / gl) + NEURAL_DIRS[d][1] * (gy / gl);
+  }
+
+  function neuralChipPins() {
+    const h = NEURAL_CHIP;
+    const pins = [];
+    [-21, -7, 7, 21].forEach((o) => {
+      pins.push({ x: h, y: o, dir: 0 });
+      pins.push({ x: -h, y: o, dir: 4 });
+      pins.push({ x: o, y: h, dir: 2 });
+      pins.push({ x: o, y: -h, dir: 6 });
+    });
+    return pins;
+  }
+
+  function neuralFinalizeTrace(pts, depth) {
+    const lens = [0];
+    for (let i = 1; i < pts.length; i++) {
+      lens.push(lens[i - 1] + Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y));
+    }
+    return { pts, lens, total: lens[lens.length - 1], depth, icon: null, flash: 0 };
+  }
+
+  function neuralGrowTrace(rand, start, dir, maxR, depth, out) {
+    const pts = [{ x: start.x, y: start.y }];
+    let x = start.x;
+    let y = start.y;
+    let d = dir;
+    for (let step = 0; step < 48; step++) {
+      const len = (step === 0 ? 16 : 12) + rand() * 26;
+      let nx = x + NEURAL_DIRS[d][0] * len;
+      let ny = y + NEURAL_DIRS[d][1] * len;
+      if (neuralEllipseNorm(nx, ny) >= maxR) {
+        let lo = 0;
+        let hi = 1;
+        for (let i = 0; i < 10; i++) {
+          const mid = (lo + hi) / 2;
+          if (neuralEllipseNorm(x + (nx - x) * mid, y + (ny - y) * mid) < maxR) lo = mid;
+          else hi = mid;
+        }
+        nx = x + (nx - x) * lo;
+        ny = y + (ny - y) * lo;
+        if (Math.hypot(nx - x, ny - y) > 4) pts.push({ x: nx, y: ny });
+        break;
+      }
+      pts.push({ x: nx, y: ny });
+      x = nx;
+      y = ny;
+      if (depth < 2 && step > 1 && rand() < 0.16) {
+        const bd = (d + (rand() < 0.5 ? 1 : 7)) % 8;
+        if (neuralOutward(bd, x, y) > 0.1) {
+          neuralGrowTrace(rand, { x, y }, bd, maxR * (0.7 + rand() * 0.3), depth + 1, out);
+        }
+      }
+      const desired = neuralDirToward(x / (NEURAL_RX * NEURAL_RX), y / (NEURAL_RY * NEURAL_RY));
+      const r = rand();
+      if (r < 0.32) d = desired;
+      else if (r >= 0.62) d = (d + (rand() < 0.5 ? 1 : 7)) % 8;
+      if (neuralOutward(d, x, y) < 0.15) d = desired;
+    }
+    if (pts.length >= 2) out.push(neuralFinalizeTrace(pts, depth));
+  }
+
+  function neuralRouteTrace(rand, pin, target) {
+    const pts = [{ x: pin.x, y: pin.y }];
+    let d = pin.dir;
+    let x = pin.x + NEURAL_DIRS[d][0] * 16;
+    let y = pin.y + NEURAL_DIRS[d][1] * 16;
+    pts.push({ x, y });
+    for (let i = 0; i < 60; i++) {
+      const dx = target.x - x;
+      const dy = target.y - y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 34) break;
+      const want = neuralDirToward(dx, dy);
+      const diff = (want - d + 8) % 8;
+      if (diff !== 0) d = diff <= 4 ? (d + 1) % 8 : (d + 7) % 8;
+      const len = Math.min(dist - 20, 22 + rand() * 34);
+      x += NEURAL_DIRS[d][0] * len;
+      y += NEURAL_DIRS[d][1] * len;
+      pts.push({ x, y });
+    }
+    pts.push({ x: target.x, y: target.y });
+    return neuralFinalizeTrace(pts, 0);
+  }
+
+  // Primera mitad en la columna izquierda y segunda en la derecha, ambas de arriba hacia abajo
+  function neuralIconPosForIndex(i, n) {
+    const half = Math.ceil(n / 2);
+    const side = i < half ? -1 : 1;
+    const count = side < 0 ? half : n - half;
+    const k = side < 0 ? i : i - half;
+    const t = count > 1 ? k / (count - 1) : 0.5;
+    const yN = -0.74 + t * 1.48;
+    return {
+      x: side * NEURAL_RX * 1.03 * Math.sqrt(1 - yN * yN),
+      y: yN * NEURAL_RY * 1.03,
+      side,
+    };
+  }
+
+  function drawNeuralIconLabel(ctx, ic, r, reveal) {
+    if (!ic.label) return;
+    const labelR = r + neuralPx(14);
+    const fs = neuralPx(10);
+    const bright = 0.62 + ic.glow * 0.32 + ic.flash * 0.2;
+    ctx.font = "600 " + fs + "px Inter, system-ui, sans-serif";
+    ctx.fillStyle = "rgba(186, 232, 255, " + (bright * reveal).toFixed(3) + ")";
+    const align = ic.side > 0 ? "left" : "right";
+    const tx = ic.x + ic.side * labelR;
+    const ty = ic.y;
+    ctx.textAlign = align;
+    ctx.textBaseline = "middle";
+    ctx.fillText(ic.label, tx, ty);
+
+    if (ic.badge) {
+      const tw = ctx.measureText(ic.label).width;
+      const gap = neuralPx(4);
+      const bh = neuralPx(11);
+      const bw = neuralPx(54);
+      let by = ty - bh / 2;
+      let bx = align === "left" ? tx + tw + gap : tx - tw - gap - bw;
+      const screenL = neuralCX + bx * neuralScale;
+      const screenR = neuralCX + (bx + bw) * neuralScale;
+      if (screenR > neuralW - 8 || screenL < 8) {
+        bx = align === "left" ? tx : tx - bw;
+        by = ty + fs * 0.75;
+      }
+      ctx.fillStyle = "rgba(0, 223, 234, " + (0.95 * reveal).toFixed(3) + ")";
+      ctx.beginPath();
+      neuralRoundRect(ctx, bx, by, bw, bh, neuralPx(3));
+      ctx.fill();
+      ctx.fillStyle = "rgba(2, 28, 36, " + reveal.toFixed(3) + ")";
+      ctx.font = "700 " + neuralPx(6.5) + "px Inter, system-ui, sans-serif";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText(ic.badge, bx + bw / 2, by + bh / 2 + neuralPx(0.3));
+    }
+  }
+
+  function ensureNeuralNetwork() {
+    if (!neuralCanvas) return;
+    if (neuralTraces.length && neuralNetBuiltVersion === NEURAL_NET_VERSION) return;
+    neuralTraces = [];
+    neuralIcons = [];
+    neuralSignals = [];
+    neuralBaseKey = "";
+    neuralNetBuiltVersion = NEURAL_NET_VERSION;
+    const rand = neuralRandom(20260924);
+    const out = [];
+    const pins = neuralChipPins();
+    pins.forEach((pin) => {
+      neuralGrowTrace(rand, pin, pin.dir, 0.62 + rand() * 0.4, 0, out);
+    });
+    [[1, 1, 1], [-1, 1, 3], [-1, -1, 5], [1, -1, 7]].forEach(([sx, sy, dir]) => {
+      neuralGrowTrace(rand, { x: sx * NEURAL_CHIP, y: sy * NEURAL_CHIP }, dir, 0.85 + rand() * 0.15, 0, out);
+    });
+    neuralIcons = NEURAL_ICONS.map((def, i) => {
+      const pos = neuralIconPosForIndex(i, NEURAL_ICONS.length);
+      const tx = pos.x;
+      const ty = pos.y;
+      const tl = Math.hypot(tx, ty) || 1;
+      let best = pins[0];
+      let bestScore = Infinity;
+      pins.forEach((p) => {
+        const facing = NEURAL_DIRS[p.dir][0] * (tx / tl) + NEURAL_DIRS[p.dir][1] * (ty / tl);
+        if (facing < 0.3) return;
+        const score = Math.hypot(tx - p.x, ty - p.y) - facing * 40;
+        if (score < bestScore) {
+          bestScore = score;
+          best = p;
+        }
+      });
+      const trace = neuralRouteTrace(rand, best, { x: tx, y: ty });
+      const icon = {
+        x: tx,
+        y: ty,
+        path: new Path2D(def.path),
+        label: def.label || "",
+        badge: def.badge || "",
+        side: pos.side,
+        trace,
+        glow: 0,
+        flash: 0,
+      };
+      trace.icon = icon;
+      out.push(trace);
+      return icon;
+    });
+    neuralTraces = out;
+  }
+
+  function neuralPx(v) {
+    return v / neuralScale;
+  }
+
+  function neuralTracePath(ctx, trace) {
+    const p = trace.pts;
+    ctx.moveTo(p[0].x, p[0].y);
+    for (let i = 1; i < p.length - 1; i++) ctx.arcTo(p[i].x, p[i].y, p[i + 1].x, p[i + 1].y, 8);
+    ctx.lineTo(p[p.length - 1].x, p[p.length - 1].y);
+  }
+
+  function neuralPointAt(trace, dist) {
+    const { pts, lens } = trace;
+    for (let i = 1; i < pts.length; i++) {
+      if (dist <= lens[i]) {
+        const seg = lens[i] - lens[i - 1] || 1;
+        const k = (dist - lens[i - 1]) / seg;
+        return { x: pts[i - 1].x + (pts[i].x - pts[i - 1].x) * k, y: pts[i - 1].y + (pts[i].y - pts[i - 1].y) * k };
+      }
+    }
+    return pts[pts.length - 1];
+  }
+
+  function neuralSegDist(px, py, a, b) {
+    const vx = b.x - a.x;
+    const vy = b.y - a.y;
+    const len2 = vx * vx + vy * vy || 1;
+    const t = Math.max(0, Math.min(1, ((px - a.x) * vx + (py - a.y) * vy) / len2));
+    return Math.hypot(px - (a.x + vx * t), py - (a.y + vy * t));
+  }
+
+  function neuralMouseVirtual() {
+    return { x: (neuralMouse.x - neuralCX) / neuralScale, y: (neuralMouse.y - neuralCY) / neuralScale };
+  }
+
+  function layoutNeuralNetwork() {
+    if (!neuralCanvas || !neuralStage || !neuralCtx) return;
+    const rect = neuralStage.getBoundingClientRect();
+    neuralW = Math.max(1, Math.round(rect.width));
+    neuralH = Math.max(1, Math.round(rect.height));
+    neuralDPR = Math.min(2, window.devicePixelRatio || 1);
+    const pxW = Math.round(neuralW * neuralDPR);
+    const pxH = Math.round(neuralH * neuralDPR);
+    if (neuralCanvas.width !== pxW) neuralCanvas.width = pxW;
+    if (neuralCanvas.height !== pxH) neuralCanvas.height = pxH;
+    neuralCanvas.style.width = neuralW + "px";
+    neuralCanvas.style.height = neuralH + "px";
+    neuralScale = Math.min((neuralW * 0.94) / NEURAL_VIEW_W, (neuralH * 0.72) / NEURAL_VIEW_H);
+    neuralCX = neuralW / 2;
+    neuralCY = neuralH * 0.57;
+    const key = pxW + "x" + pxH;
+    if (key !== neuralBaseKey) {
+      neuralBaseKey = key;
+      renderNeuralBase();
+    }
+  }
+
+  function renderNeuralBase() {
+    if (!neuralBase) neuralBase = document.createElement("canvas");
+    neuralBase.width = neuralCanvas.width;
+    neuralBase.height = neuralCanvas.height;
+    const b = neuralBase.getContext("2d");
+    b.setTransform(1, 0, 0, 1, 0, 0);
+    b.clearRect(0, 0, neuralBase.width, neuralBase.height);
+    b.setTransform(neuralDPR * neuralScale, 0, 0, neuralDPR * neuralScale, neuralDPR * neuralCX, neuralDPR * neuralCY);
+    b.lineCap = "round";
+    b.lineJoin = "round";
+    b.shadowColor = "rgba(0, 223, 234, .55)";
+    b.shadowBlur = 8 * neuralDPR;
+    neuralTraces.forEach((t) => {
+      b.strokeStyle = t.depth === 0 ? "rgba(64, 214, 240, .62)" : "rgba(64, 214, 240, .4)";
+      b.lineWidth = neuralPx(t.depth === 0 ? 1.5 : 1.1);
+      b.beginPath();
+      neuralTracePath(b, t);
+      b.stroke();
+    });
+    neuralTraces.forEach((t) => {
+      if (t.depth > 0) {
+        const s = t.pts[0];
+        b.fillStyle = "rgba(110, 236, 255, .85)";
+        b.beginPath();
+        b.arc(s.x, s.y, neuralPx(1.9), 0, Math.PI * 2);
+        b.fill();
+      }
+      if (t.icon) return;
+      const e = t.pts[t.pts.length - 1];
+      b.fillStyle = "#03101c";
+      b.strokeStyle = "rgba(110, 236, 255, .95)";
+      b.lineWidth = neuralPx(1.3);
+      b.beginPath();
+      b.arc(e.x, e.y, neuralPx(3.4), 0, Math.PI * 2);
+      b.fill();
+      b.stroke();
+    });
+    b.shadowBlur = 0;
+  }
+
+  function neuralRoundRect(ctx, x, y, w, h, r) {
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.closePath();
+  }
+
+  function drawNeuralFrame(elapsed) {
+    if (!neuralCtx) return;
+    const ctx = neuralCtx;
+    const TAU = Math.PI * 2;
+    const t = Math.max(0, Math.min(1, elapsed / 0.9));
+    const reveal = t * t * (3 - 2 * t);
+    const now = performance.now();
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    ctx.clearRect(0, 0, neuralCanvas.width, neuralCanvas.height);
+    ctx.globalAlpha = reveal;
+    if (neuralBase) ctx.drawImage(neuralBase, 0, 0);
+    ctx.setTransform(neuralDPR * neuralScale, 0, 0, neuralDPR * neuralScale, neuralDPR * neuralCX, neuralDPR * neuralCY);
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+
+    const pulse = 0.5 + 0.5 * Math.sin(now / 1100);
+    const haloR = 120 + pulse * 22;
+    const halo = ctx.createRadialGradient(0, 0, 0, 0, 0, haloR);
+    halo.addColorStop(0, "rgba(0, 223, 234, .22)");
+    halo.addColorStop(0.5, "rgba(0, 113, 227, .08)");
+    halo.addColorStop(1, "rgba(0, 113, 227, 0)");
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(0, 0, haloR, 0, TAU);
+    ctx.fill();
+
+    if (neuralMouse.active) {
+      const m = neuralMouseVirtual();
+      const R = neuralPx(NEURAL_HOVER_PX);
+      neuralTraces.forEach((tr) => {
+        for (let i = 1; i < tr.pts.length; i++) {
+          const dd = neuralSegDist(m.x, m.y, tr.pts[i - 1], tr.pts[i]);
+          if (dd >= R) continue;
+          const k = 1 - dd / R;
+          ctx.strokeStyle = "rgba(190, 248, 255, " + ((0.2 + 0.65 * k) * reveal).toFixed(3) + ")";
+          ctx.lineWidth = neuralPx(1.3 + 1.6 * k);
+          ctx.beginPath();
+          ctx.moveTo(tr.pts[i - 1].x, tr.pts[i - 1].y);
+          ctx.lineTo(tr.pts[i].x, tr.pts[i].y);
+          ctx.stroke();
+        }
+      });
+    }
+
+    neuralTraces.forEach((tr) => {
+      if (!tr.flash || tr.icon) return;
+      const e = tr.pts[tr.pts.length - 1];
+      const r = neuralPx(4 + tr.flash * 10);
+      const g = ctx.createRadialGradient(e.x, e.y, 0, e.x, e.y, r);
+      g.addColorStop(0, "rgba(220, 252, 255, " + (0.9 * tr.flash * reveal).toFixed(3) + ")");
+      g.addColorStop(1, "rgba(0, 223, 234, 0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(e.x, e.y, r, 0, TAU);
+      ctx.fill();
+    });
+
+    neuralSignals.forEach((sg) => {
+      for (let k = 5; k >= 1; k--) {
+        const dpos = sg.pos - k * neuralPx(6);
+        if (dpos < 0) continue;
+        const p = neuralPointAt(sg.trace, dpos);
+        ctx.fillStyle = "rgba(120, 235, 255, " + ((1 - k / 6) * 0.6 * reveal).toFixed(3) + ")";
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, neuralPx(1.7), 0, TAU);
+        ctx.fill();
+      }
+      const p = neuralPointAt(sg.trace, sg.pos);
+      const gr = neuralPx(9);
+      const g = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, gr);
+      g.addColorStop(0, "rgba(170, 246, 255, " + (0.6 * reveal).toFixed(3) + ")");
+      g.addColorStop(1, "rgba(170, 246, 255, 0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, gr, 0, TAU);
+      ctx.fill();
+      ctx.fillStyle = "rgba(255, 255, 255, " + reveal.toFixed(3) + ")";
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, neuralPx(2.4), 0, TAU);
+      ctx.fill();
+    });
+
+    neuralIcons.forEach((ic) => {
+      const amt = Math.max(ic.glow, ic.flash);
+      const r = Math.max(17, neuralPx(11.5)) * (1 + amt * 0.14);
+      const hr = r * (1.9 + amt * 0.5);
+      const g = ctx.createRadialGradient(ic.x, ic.y, r * 0.6, ic.x, ic.y, hr);
+      g.addColorStop(0, "rgba(0, 223, 234, " + ((0.22 + amt * 0.4) * reveal).toFixed(3) + ")");
+      g.addColorStop(1, "rgba(0, 223, 234, 0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(ic.x, ic.y, hr, 0, TAU);
+      ctx.fill();
+      ctx.fillStyle = "rgba(3, 16, 28, .94)";
+      ctx.strokeStyle = "rgba(110, 236, 255, " + (0.75 + amt * 0.25).toFixed(3) + ")";
+      ctx.lineWidth = neuralPx(1.4 + amt);
+      ctx.beginPath();
+      ctx.arc(ic.x, ic.y, r, 0, TAU);
+      ctx.fill();
+      ctx.stroke();
+      const size = r * 1.12;
+      ctx.save();
+      ctx.translate(ic.x - size / 2, ic.y - size / 2);
+      ctx.scale(size / 24, size / 24);
+      ctx.strokeStyle = amt > 0.3 ? "rgba(235, 253, 255, .98)" : "rgba(150, 240, 255, .95)";
+      ctx.lineWidth = 1.7;
+      ctx.stroke(ic.path);
+      ctx.restore();
+
+      drawNeuralIconLabel(ctx, ic, r, reveal);
+    });
+
+    const h = NEURAL_CHIP;
+    ctx.save();
+    ctx.shadowColor = "rgba(0, 223, 234, .8)";
+    ctx.shadowBlur = (14 + pulse * 10) * neuralDPR;
+    ctx.fillStyle = "rgba(3, 18, 30, .96)";
+    ctx.strokeStyle = "rgba(110, 236, 255, .95)";
+    ctx.lineWidth = neuralPx(1.6);
+    ctx.beginPath();
+    neuralRoundRect(ctx, -h, -h, h * 2, h * 2, 9);
+    ctx.fill();
+    ctx.stroke();
+    ctx.restore();
+    ctx.strokeStyle = "rgba(110, 236, 255, .35)";
+    ctx.lineWidth = neuralPx(1);
+    ctx.beginPath();
+    neuralRoundRect(ctx, -h + 7, -h + 7, h * 2 - 14, h * 2 - 14, 5);
+    ctx.stroke();
+    ctx.fillStyle = "rgba(210, 250, 255, .96)";
+    ctx.font = "700 22px Inter, sans-serif";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.fillText("IA", 0, 1);
+    ctx.globalAlpha = 1;
+  }
+
+  function spawnNeuralSignal(nearMouse) {
+    if (!neuralTraces.length) return;
+    let trace = null;
+    if (nearMouse && neuralMouse.active) {
+      const m = neuralMouseVirtual();
+      let best = Infinity;
+      neuralTraces.forEach((tr) => {
+        for (let i = 1; i < tr.pts.length; i++) {
+          const dd = neuralSegDist(m.x, m.y, tr.pts[i - 1], tr.pts[i]);
+          if (dd < best && Math.random() < 0.6) {
+            best = dd;
+            trace = tr;
+          }
+        }
+      });
+      if (best > neuralPx(NEURAL_HOVER_PX)) trace = null;
+    }
+    if (!trace) {
+      const pool = Math.random() < 0.35 ? neuralTraces.filter((tr) => tr.icon) : neuralTraces;
+      trace = pool[Math.floor(Math.random() * pool.length)];
+    }
+    neuralSignals.push({ trace, pos: 0, speed: 240 + Math.random() * 170 });
+  }
+
+  function neuralTick(ts) {
+    if (!neuralRunning || !neuralCtx) return;
+    if (!neuralLastTs) neuralLastTs = ts;
+    const dt = Math.min(0.05, (ts - neuralLastTs) / 1000);
+    neuralLastTs = ts;
+    const elapsed = (ts - neuralRevealStart) / 1000;
+
+    const m = neuralMouse.active ? neuralMouseVirtual() : null;
+    const R = neuralPx(NEURAL_HOVER_PX * 1.2);
+    neuralIcons.forEach((ic) => {
+      const target = m ? Math.max(0, 1 - Math.hypot(ic.x - m.x, ic.y - m.y) / R) : 0;
+      ic.glow += (target - ic.glow) * 0.15;
+      if (ic.flash) ic.flash = Math.max(0, ic.flash - dt * 1.8);
+    });
+    neuralTraces.forEach((tr) => {
+      if (tr.flash) tr.flash = Math.max(0, tr.flash - dt * 2.4);
+    });
+
+    neuralSignalAcc += dt;
+    const interval = neuralMouse.active ? 0.08 : 0.15;
+    if (neuralSignalAcc > interval) {
+      neuralSignalAcc = 0;
+      if (neuralSignals.length < NEURAL_MAX_SIGNALS) spawnNeuralSignal(neuralMouse.active && Math.random() < 0.6);
+    }
+    for (let i = neuralSignals.length - 1; i >= 0; i--) {
+      const sg = neuralSignals[i];
+      sg.pos += sg.speed * dt;
+      if (sg.pos >= sg.trace.total) {
+        sg.trace.flash = 1;
+        if (sg.trace.icon) sg.trace.icon.flash = 1;
+        neuralSignals.splice(i, 1);
+      }
+    }
+
+    drawNeuralFrame(elapsed);
+    neuralRAF = requestAnimationFrame(neuralTick);
+  }
+
+  function bindNeuralPointer() {
+    if (!neuralCanvas || neuralCanvas.dataset.bound === "1") return;
+    neuralCanvas.dataset.bound = "1";
+    const setMouse = (e) => {
+      const rect = neuralCanvas.getBoundingClientRect();
+      neuralMouse.x = e.clientX - rect.left;
+      neuralMouse.y = e.clientY - rect.top;
+      neuralMouse.active = true;
+    };
+    neuralCanvas.addEventListener("pointermove", setMouse, { passive: true });
+    neuralCanvas.addEventListener("pointerdown", (e) => {
+      setMouse(e);
+      if (!neuralRunning) return;
+      for (let i = 0; i < 6 && neuralSignals.length < NEURAL_MAX_SIGNALS + 6; i++) spawnNeuralSignal(true);
+    }, { passive: true });
+    neuralCanvas.addEventListener("pointerleave", () => {
+      neuralMouse.active = false;
+    });
+    neuralCanvas.addEventListener("pointercancel", () => {
+      neuralMouse.active = false;
+    });
+  }
+
+  function stopNeuralAnim() {
+    neuralRunning = false;
+    if (neuralRAF) cancelAnimationFrame(neuralRAF);
+    neuralRAF = null;
+    neuralMouse.active = false;
+  }
+
+  function syncNeuralSlide(restart) {
+    if (!neuralSlide || !neuralCanvas || !neuralCtx) return;
+    if (slides[current] !== neuralSlide) {
+      stopNeuralAnim();
+      return;
+    }
+    ensureNeuralNetwork();
+    bindNeuralPointer();
+    layoutNeuralNetwork();
+    if (restart || !neuralRevealStart) {
+      neuralRevealStart = performance.now();
+      neuralSignals.length = 0;
+      neuralSignalAcc = 0;
+    }
+
+    if (neuralPrefersReducedMotion()) {
+      stopNeuralAnim();
+      neuralSignals.length = 0;
+      drawNeuralFrame(10);
+      return;
+    }
+    if (!neuralRunning) {
+      neuralRunning = true;
+      neuralLastTs = 0;
+      neuralRAF = requestAnimationFrame(neuralTick);
+    }
   }
 
   function tracePrefersReducedMotion() {
@@ -1566,6 +2213,191 @@
     }
   });
 
+  // Casos de éxito: selector de empresas con transición lateral, contador, entrada escalonada
+  // e interruptor Sin / Con Punto Ok con paso automático
+  const caseCountTimers = new WeakMap();
+  const caseLeaveTimers = new WeakMap();
+  const CASE_AUTO_MS = 4500;
+  let caseAutoTimer = 0;
+  let caseAutoSwitch = null;
+
+  function countUpCase(el) {
+    const target = parseInt(el.dataset.count, 10);
+    if (!target) return;
+    const prev = caseCountTimers.get(el);
+    if (prev) {
+      cancelAnimationFrame(prev.raf);
+      clearTimeout(prev.done);
+    }
+    if (!motionOk()) {
+      el.textContent = String(target);
+      return;
+    }
+    const duration = 1100;
+    const delay = 180;
+    const timers = { raf: 0, done: 0 };
+    let start = 0;
+    el.textContent = "0";
+    const step = (now) => {
+      if (!start) start = now + delay;
+      const t = Math.min(1, Math.max(0, (now - start) / duration));
+      el.textContent = String(Math.round(target * (1 - Math.pow(1 - t, 3))));
+      if (t < 1) timers.raf = requestAnimationFrame(step);
+    };
+    timers.raf = requestAnimationFrame(step);
+    // Si el navegador pausa los frames (pestaña oculta), el número final igual queda visible
+    timers.done = setTimeout(() => {
+      cancelAnimationFrame(timers.raf);
+      el.textContent = String(target);
+    }, delay + duration + 200);
+    caseCountTimers.set(el, timers);
+  }
+
+  // Subrayado azul que se desliza bajo la empresa elegida
+  function moveCasePill(container) {
+    const pill = container?.querySelector(".case-pill");
+    const active = container?.querySelector(".is-active[role='tab']");
+    if (!pill || !active || !active.offsetWidth) return;
+    pill.style.width = active.offsetWidth + "px";
+    pill.style.transform = "translateX(" + active.offsetLeft + "px)";
+    if (!pill.classList.contains("is-ready")) setTimeout(() => pill.classList.add("is-ready"), 0);
+  }
+
+  // Sin / Con Punto Ok: muestra la grilla que corresponde y cambia el título
+  function setCaseState(sw, on) {
+    const changed = sw.classList.contains("is-on") !== on;
+    sw.classList.toggle("is-on", on);
+    sw.querySelectorAll(".case-switch__btn").forEach((btn) => {
+      const active = (btn.dataset.state === "on") === on;
+      btn.classList.toggle("is-active", active);
+      btn.setAttribute("aria-pressed", String(active));
+    });
+    const title = sw.closest(".case-panel__story")?.querySelector(".case-story__title");
+    if (title) title.textContent = on ? title.dataset.on : title.dataset.off;
+    [[sw.dataset.off, !on], [sw.dataset.on, on]].forEach(([id, show]) => {
+      const v = document.getElementById(id);
+      if (!v) return;
+      v.classList.toggle("is-active", show);
+      v.toggleAttribute("inert", !show);
+      v.setAttribute("aria-hidden", String(!show));
+      if (show && changed && motionOk()) {
+        v.classList.remove("is-entering");
+        void v.offsetWidth;
+        v.classList.add("is-entering");
+      }
+    });
+  }
+
+  function stopCaseAuto() {
+    clearTimeout(caseAutoTimer);
+    caseAutoTimer = 0;
+    caseAutoSwitch?.classList.remove("is-timing");
+    caseAutoSwitch = null;
+  }
+
+  // Arranca "sin Punto Ok" y, pasados unos segundos, lo enciende solo
+  function startCaseAuto(panel) {
+    stopCaseAuto();
+    const sw = panel?.querySelector(".case-switch");
+    if (!sw) return;
+    setCaseState(sw, false);
+    if (!motionOk()) return;
+    caseAutoSwitch = sw;
+    sw.style.setProperty("--case-auto", CASE_AUTO_MS + "ms");
+    sw.classList.remove("is-timing");
+    void sw.offsetWidth;
+    sw.classList.add("is-timing");
+    caseAutoTimer = setTimeout(() => {
+      stopCaseAuto();
+      setCaseState(sw, true);
+    }, CASE_AUTO_MS);
+  }
+
+  function playCasePanel(panel, dir) {
+    if (!panel) return;
+    casesSlide?.querySelector(".case-stage")?.style.setProperty("--dir", String(dir || 0));
+    panel.querySelectorAll(".case-panel__num").forEach(countUpCase);
+    moveCasePill(casesSlide?.querySelector(".case-picker"));
+    startCaseAuto(panel);
+    if (!motionOk()) return;
+    panel.classList.remove("is-entering");
+    void panel.offsetWidth;
+    panel.classList.add("is-entering");
+  }
+
+  if (casesSlide) {
+    const casePicker = casesSlide.querySelector(".case-picker");
+    const caseTabs = Array.from(casesSlide.querySelectorAll(".case-tab"));
+    const casePanels = Array.from(casesSlide.querySelectorAll(".case-panel"));
+
+    casePanels.forEach((panel) => {
+      panel.querySelectorAll(".case-panel__num").forEach((el) => { el.dataset.count = el.textContent.trim(); });
+      panel.querySelectorAll(
+        ".case-card__kicker, .case-card__sector, .case-panel__stat, .case-story__head, .case-panel__proof"
+      ).forEach((el, i) => {
+        el.classList.add("case-stagger");
+        el.style.setProperty("--i", i);
+      });
+    });
+
+    const selectCase = (tab) => {
+      const prevTab = caseTabs.find((t) => t.classList.contains("is-active"));
+      const dir = caseTabs.indexOf(tab) > caseTabs.indexOf(prevTab) ? 1 : -1;
+      caseTabs.forEach((t) => {
+        const on = t === tab;
+        t.classList.toggle("is-active", on);
+        t.setAttribute("aria-selected", String(on));
+        const panel = document.getElementById(t.getAttribute("aria-controls"));
+        if (!panel) return;
+        clearTimeout(caseLeaveTimers.get(panel));
+        if (on) {
+          panel.classList.remove("is-leaving");
+          panel.inert = false;
+          panel.hidden = false;
+          panel.classList.add("is-active");
+          playCasePanel(panel, dir);
+        } else if (panel.classList.contains("is-active")) {
+          panel.classList.remove("is-active", "is-entering");
+          panel.inert = true;
+          if (motionOk()) {
+            panel.classList.add("is-leaving");
+            caseLeaveTimers.set(panel, setTimeout(() => {
+              panel.classList.remove("is-leaving");
+              panel.hidden = true;
+            }, 380));
+          } else {
+            panel.hidden = true;
+          }
+        }
+      });
+      moveCasePill(casePicker);
+    };
+    caseTabs.forEach((tab) =>
+      tab.addEventListener("click", () => { if (!tab.classList.contains("is-active")) selectCase(tab); })
+    );
+
+    casesSlide.querySelectorAll(".case-switch").forEach((sw) => {
+      [sw.dataset.off, sw.dataset.on].forEach((id) => {
+        document.getElementById(id)?.querySelectorAll("li").forEach((li, j) => li.style.setProperty("--j", j));
+      });
+      sw.querySelectorAll(".case-switch__btn").forEach((btn) => {
+        btn.addEventListener("click", () => setCaseState(sw, btn.dataset.state === "on"));
+      });
+    });
+
+    // Cualquier toque en el slide frena el paso automático (elegir otra empresa lo reinicia)
+    casesSlide.addEventListener("pointerdown", stopCaseAuto);
+
+    const syncCasePills = () => moveCasePill(casePicker);
+    syncCasePills();
+    if ("ResizeObserver" in window) {
+      const pickerObserver = new ResizeObserver(syncCasePills);
+      caseTabs.forEach((tab) => pickerObserver.observe(tab));
+    }
+    document.fonts?.ready.then(syncCasePills);
+    window.addEventListener("resize", syncCasePills, { passive: true });
+  }
+
   // Logo strip: scroll, arrastre y auto-desplazamiento infinito
   const clientsSlide = document.querySelector(".slide--clients");
   const logosAutoTickers = [];
@@ -2420,6 +3252,9 @@
     if (slide === implSlide) {
       playImplTimeline();
       syncImplHeroPhoto(true);
+    }
+    if (slide === neuralSlide) {
+      syncNeuralSlide(true);
     }
     if (slide === traceSlide) playTraceSlide();
   }

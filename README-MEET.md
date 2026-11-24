@@ -1,6 +1,6 @@
 # Punto Ok · Complemento privado de Google Meet
 
-Integración de la presentación HTML (10 diapositivas, animaciones, videos e interacciones) como **Google Meet Add-on** con:
+Integración de la presentación HTML (11 diapositivas, animaciones, videos e interacciones) como **Google Meet Add-on** con:
 
 - **Escenario principal:** la presentación visible para todos en la reunión.
 - **Panel lateral:** control del presentador (solo visible para quien comparte).

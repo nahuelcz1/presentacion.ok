@@ -27,7 +27,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" />
-  <link rel="stylesheet" href="styles.css?v=164" />
+  <link rel="stylesheet" href="styles.css?v=222" />
 </head>
 <body>
   <a class="skip-link" href="#deck">Saltar a la presentación</a>
@@ -51,7 +51,7 @@
   </div>
 
   <!-- PROGRESS -->
-  <div class="progress" role="progressbar" id="progress" aria-valuemin="1" aria-valuemax="10" aria-valuenow="1" aria-label="Progreso de la presentación"><div class="progress__bar" id="progressBar"></div></div>
+  <div class="progress" role="progressbar" id="progress" aria-valuemin="1" aria-valuemax="11" aria-valuenow="1" aria-label="Progreso de la presentación"><div class="progress__bar" id="progressBar"></div></div>
 
   <!-- DECK -->
   <main class="deck" id="deck" aria-roledescription="presentación">
@@ -156,7 +156,151 @@
       </div>
     </section>
 
-    <!-- 3 · ECOSISTEMA -->
+    <!-- 3 · CASOS DE ÉXITO -->
+    <section class="slide slide--cases" data-title="Casos de éxito" id="slideCases" aria-label="Casos de éxito">
+      <div class="s-inner s-inner--cases">
+        <header class="cases-head anim" data-anim="1">
+          <div>
+            <p class="cases-kicker">Clientes · Casos de éxito</p>
+            <h2 class="cases-title">Grandes equipos.<br /><span>Gestión más simple.</span></h2>
+          </div>
+          <p class="cases-lead">Empresas que organizan su día a día con Punto Ok.</p>
+        </header>
+
+        <div class="case-picker anim" data-anim="2" role="tablist" aria-label="Elegir empresa">
+          <span class="case-pill" aria-hidden="true"></span>
+          <button type="button" class="case-tab is-active" role="tab" id="caseTabAgrofertil" aria-selected="true" aria-controls="casePanelAgrofertil" title="Agrofértil">
+            <img src="logos/agrofertil.png" alt="" /><span class="sr-only">Agrofértil</span>
+          </button>
+          <button type="button" class="case-tab" role="tab" id="caseTabInacon" aria-selected="false" aria-controls="casePanelInacon" title="Inacon">
+            <img src="logos/inacon.png" alt="" /><span class="sr-only">Inacon</span>
+          </button>
+          <button type="button" class="case-tab" role="tab" id="caseTabTalleyrand" aria-selected="false" aria-controls="casePanelTalleyrand" title="Talleyrand">
+            <img src="logos/talleyrand.png" alt="" /><span class="sr-only">Talleyrand</span>
+          </button>
+        </div>
+
+        <div class="case-stage anim" data-anim="3">
+          <article class="case-panel is-active" role="tabpanel" id="casePanelAgrofertil" aria-labelledby="caseTabAgrofertil">
+            <aside class="case-card">
+              <p class="case-card__kicker">Caso de éxito</p>
+              <div class="case-card__logo"><img class="case-panel__logo" src="logos/agrofertil.png" alt="Agrofértil" /></div>
+              <p class="case-card__sector"><b>Sector:</b> Agro · insumos agrícolas</p>
+              <p class="case-panel__stat"><span class="case-panel__num">420</span><span>colaboradores</span></p>
+            </aside>
+            <div class="case-panel__story">
+              <div class="case-story__head">
+                <h3 class="case-story__title" data-off="Así era antes." data-on="Todo en su lugar.">Así era antes.</h3>
+                <div class="case-switch" role="group" aria-label="Ver la gestión sin o con Punto Ok" data-off="agroBefore" data-on="agroAfter">
+                  <button type="button" class="case-switch__btn is-active" data-state="off" aria-pressed="true" title="Sin Punto Ok"><span class="sr-only">Sin Punto Ok</span></button>
+                  <button type="button" class="case-switch__btn" data-state="on" aria-pressed="false" title="Con Punto Ok"><span class="sr-only">Con Punto Ok</span></button>
+                </div>
+              </div>
+              <div class="case-views">
+                <div class="case-view case-view--before is-active" id="agroBefore" aria-label="Sin Punto Ok">
+                  <ul class="case-grid case-grid--single">
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Gestión de turnos fijos y mixtos rotativos</strong><span>Organización y asignación manual de turnos diurnos y mixtos, con mayor trabajo para coordinar las rotaciones.</span></div></li>
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Control de asistencia en más de 30 puntos de marcación</strong><span>No podían consultar en tiempo real las marcaciones de sus más de 30 puntos, lo que dificultaba detectar ausencias.</span></div></li>
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Centralización del legajo de colaboradores</strong><span>Información y documentos dispersos en distintos registros, dificultando encontrar los datos y consultar el historial de cada colaborador.</span></div></li>
+                  </ul>
+                </div>
+                <div class="case-view" id="agroAfter" aria-label="Con Punto Ok" aria-hidden="true" inert>
+                  <ul class="case-grid case-grid--single">
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><div><strong>Gestión de turnos fijos y mixtos rotativos</strong><span>Configuración y asignación de turnos según la rotación y las necesidades de cada equipo.</span></div></li>
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0c0 5.4-6.5 11-6.5 11z"/><path d="M9.5 10l1.8 1.8 3.4-3.4"/></svg><div><strong>Control de asistencia en más de 30 puntos de marcación</strong><span>Marcaciones centralizadas y disponibles en tiempo real, dónde y a qué hora, y dar seguimiento a las incidencias sin esperar a recopilar los registros.</span></div></li>
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/><path d="M8.5 13.5h7"/></svg><div><strong>Centralización del legajo de colaboradores</strong><span>Información, documentos e historial centralizados en un solo lugar para agilizar las consultas y el seguimiento.</span></div></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="case-panel__proof">
+                <span class="case-stars" role="img" aria-label="5 de 5 estrellas"><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg></span>
+                <blockquote class="case-panel__quote"><p>“La plataforma es fácil de usar y recomendamos Punto Ok.”</p></blockquote>
+                <p class="case-panel__who"><strong>Michelli</strong><span>Gerente de RR.HH.</span></p>
+                <span class="case-panel__nps" aria-label="NPS 10 de 10">NPS <strong>10/10</strong></span>
+              </div>
+            </div>
+          </article>
+          <article class="case-panel" role="tabpanel" id="casePanelInacon" aria-labelledby="caseTabInacon" hidden>
+            <aside class="case-card">
+              <p class="case-card__kicker">Caso de éxito</p>
+              <div class="case-card__logo"><img class="case-panel__logo" src="logos/inacon.png" alt="Inacon" /></div>
+              <p class="case-card__sector"><b>Sector:</b> Industria · conductores eléctricos</p>
+              <p class="case-panel__stat"><span class="case-panel__num">193</span><span>colaboradores</span></p>
+            </aside>
+            <div class="case-panel__story">
+              <div class="case-story__head">
+                <h3 class="case-story__title" data-off="Así era antes." data-on="Todo en su lugar.">Así era antes.</h3>
+                <div class="case-switch" role="group" aria-label="Ver la gestión sin o con Punto Ok" data-off="inaconBefore" data-on="inaconAfter">
+                  <button type="button" class="case-switch__btn is-active" data-state="off" aria-pressed="true" title="Sin Punto Ok"><span class="sr-only">Sin Punto Ok</span></button>
+                  <button type="button" class="case-switch__btn" data-state="on" aria-pressed="false" title="Con Punto Ok"><span class="sr-only">Con Punto Ok</span></button>
+                </div>
+              </div>
+              <div class="case-views">
+                <div class="case-view case-view--before is-active" id="inaconBefore" aria-label="Sin Punto Ok">
+                  <ul class="case-grid">
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Reloj marcador con fallas</strong><span>Problemas constantes con su reloj marcador.</span></div></li>
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Sin sistema de RR.HH.</strong><span>Toda la gestión de personas fuera de un sistema.</span></div></li>
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Vacaciones a mano</strong><span>No planificadas y sin aviso de vencimientos.</span></div></li>
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Tareas olvidadas</strong><span>Rutinas de RR.HH. sin recordatorios.</span></div></li>
+                  </ul>
+                </div>
+                <div class="case-view" id="inaconAfter" aria-label="Con Punto Ok" aria-hidden="true" inert>
+                  <ul class="case-grid">
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8V6a2 2 0 0 1 2-2h2M16 4h2a2 2 0 0 1 2 2v2M20 16v2a2 2 0 0 1-2 2h-2M8 20H6a2 2 0 0 1-2-2v-2"/><circle cx="12" cy="10.5" r="2.5"/><path d="M8.5 16.5c.8-1.6 2-2.4 3.5-2.4s2.7.8 3.5 2.4"/></svg><div><strong>Marcación confiable</strong><span>Tótem con reconocimiento facial.</span></div></li>
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5z"/><path d="M3 13l9 5 9-5"/></svg><div><strong>RR.HH. en un solo lugar</strong><span>Plataforma completa de gestión de personas.</span></div></li>
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M8 3v4M16 3v4M4 10h16"/></svg><div><strong>Vacaciones al día</strong><span>Usufructos, saldos y vencimientos a la vista.</span></div></li>
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 16v-5a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><div><strong>Nada se olvida</strong><span>Notificaciones automáticas para cada tarea.</span></div></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="case-panel__proof">
+                <span class="case-stars" role="img" aria-label="5 de 5 estrellas"><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg><svg viewBox="0 0 24 24"><path d="M12 2.6L14.47 9.2L21.51 9.51L15.99 13.9L17.88 20.69L12 16.8L6.12 20.69L8.01 13.9L2.49 9.51L9.53 9.2Z"/></svg></span>
+                <blockquote class="case-panel__quote"><p>“Es súper intuitivo y facilita muchísimo la actividad diaria de RR.HH.”</p></blockquote>
+                <p class="case-panel__who"><strong>Adriana</strong><span>Recursos Humanos</span></p>
+                <span class="case-panel__nps" aria-label="NPS 10 de 10">NPS <strong>10/10</strong></span>
+              </div>
+            </div>
+          </article>
+          <article class="case-panel" role="tabpanel" id="casePanelTalleyrand" aria-labelledby="caseTabTalleyrand" hidden>
+            <aside class="case-card">
+              <p class="case-card__kicker">Caso de éxito</p>
+              <div class="case-card__logo"><img class="case-panel__logo" src="logos/talleyrand.png" alt="Talleyrand" /></div>
+              <p class="case-card__sector"><b>Sector:</b> Gastronomía y eventos</p>
+              <p class="case-panel__stat"><span class="case-panel__num">720</span><span>colaboradores</span></p>
+            </aside>
+            <div class="case-panel__story">
+              <div class="case-story__head">
+                <h3 class="case-story__title" data-off="Así era antes." data-on="Todo en su lugar.">Así era antes.</h3>
+                <div class="case-switch" role="group" aria-label="Ver la gestión sin o con Punto Ok" data-off="talleyBefore" data-on="talleyAfter">
+                  <button type="button" class="case-switch__btn is-active" data-state="off" aria-pressed="true" title="Sin Punto Ok"><span class="sr-only">Sin Punto Ok</span></button>
+                  <button type="button" class="case-switch__btn" data-state="on" aria-pressed="false" title="Con Punto Ok"><span class="sr-only">Con Punto Ok</span></button>
+                </div>
+              </div>
+              <div class="case-views">
+                <div class="case-view case-view--before is-active" id="talleyBefore" aria-label="Sin Punto Ok">
+                  <ul class="case-grid">
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Locales desconectados</strong><span>Personal repartido sin un control unificado.</span></div></li>
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Horarios cortados</strong><span>Hasta seis marcaciones por día.</span></div></li>
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Sin visibilidad diaria</strong><span>Tardanzas y ausencias sin seguimiento.</span></div></li>
+                    <li class="case-item case-item--bad"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M9.2 9.2l5.6 5.6M14.8 9.2l-5.6 5.6"/></svg><div><strong>Reportes dispares</strong><span>Cada local con su formato, difíciles de comparar.</span></div></li>
+                  </ul>
+                </div>
+                <div class="case-view" id="talleyAfter" aria-label="Con Punto Ok" aria-hidden="true" inert>
+                  <ul class="case-grid">
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10h16l-1.5-5h-13z"/><path d="M5 10v9h14v-9"/><path d="M10 19v-5h4v5"/></svg><div><strong>Todos los locales</strong><span>Marcación por app y tótem en un solo sistema.</span></div></li>
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg><div><strong>Turnos a medida</strong><span>Fijos, flexibles y cortados, con sus intervalos.</span></div></li>
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 12h4l2-5 4 10 2-5h6"/></svg><div><strong>Tiempo Real</strong><span>Tardanzas y ausencias de cada local al instante.</span></div></li>
+                    <li class="case-item"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 20V4M4 20h16"/><path d="M8 16v-4M12 16V8M16 16v-6"/></svg><div><strong>Reportes unificados</strong><span>Por local, área y colaborador, con un mismo formato.</span></div></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4 · ECOSISTEMA -->
     <section class="slide slide--center slide--eco" data-title="Ecosistema" id="slideEco">
       <div class="s-inner s-inner--eco">
         <span class="kicker center anim" data-anim="1">La solución</span>
@@ -224,7 +368,7 @@
       </div>
     </section>
 
-    <!-- 4 · DOS FORMAS DE MARCAR -->
+    <!-- 5 · DOS FORMAS DE MARCAR -->
     <section class="slide slide--center slide--soft" data-title="Formas de marcar" id="slideMark">
       <div class="s-inner">
         <h2 class="headline center anim" data-anim="1">Una solución, <span class="accent">dos formas de marcar</span></h2>
@@ -286,7 +430,7 @@
       </div>
     </section>
 
-    <!-- 5 · FUNCIONALIDADES -->
+    <!-- 6 · FUNCIONALIDADES -->
     <section class="slide slide--center" data-title="Funcionalidades" id="slideFeatures">
       <div class="s-inner s-inner--feat">
         <div class="feat-main">
@@ -326,7 +470,7 @@
       </div>
     </section>
 
-    <!-- 6 · GEOLOCALIZACIÓN E HISTORIAL -->
+    <!-- 7 · GEOLOCALIZACIÓN E HISTORIAL -->
     <section class="slide slide--center slide--trace" data-title="Geolocalización" id="slideTraceability" aria-label="Geolocalización">
       <div class="s-inner s-inner--trace">
         <span class="kicker center anim" data-anim="1">Trazabilidad en tiempo real</span>
@@ -483,7 +627,7 @@
       </div>
     </section>
 
-    <!-- 7 · PLATAFORMA / MODULOS -->
+    <!-- 8 · PLATAFORMA / MODULOS -->
     <section class="slide slide--platform" data-title="Plataforma">
       <div class="s-inner s-inner--platform">
         <div class="platform-grid">
@@ -525,7 +669,7 @@
       </div>
     </section>
 
-    <!-- 8 · DEMO -->
+    <!-- 9 · DEMO -->
     <section class="slide slide--center slide--soft" data-title="Demo">
       <div class="s-inner">
         <div class="demo-play anim" data-anim="1">
@@ -539,7 +683,7 @@
       </div>
     </section>
 
-    <!-- 9 · IMPLEMENTACIÓN GUIADA -->
+    <!-- 10 · IMPLEMENTACIÓN GUIADA -->
     <section class="slide slide--center slide--impl" data-title="Implementación" id="slideImplementation" aria-label="Implementación">
       <div class="s-inner s-inner--impl">
         <header class="impl-hero anim" data-anim="1">
@@ -641,7 +785,7 @@
       </div>
     </section>
 
-    <!-- 10 · SOPORTE -->
+    <!-- 11 · SOPORTE -->
     <section class="slide slide--dark slide--center slide--support" data-title="Soporte" id="slideSupport">
       <div class="support-bg" aria-hidden="true">
         <video class="support-bg__video" id="supportBgVideo" src="video-bg-pag11.mp4" playsinline muted loop preload="metadata"></video>
@@ -674,7 +818,7 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L8 18l-4 1 1-4L16.5 3.5z"/><path d="M14 6l4 4"/></svg>
   </button>
   <nav class="dots" id="dots" aria-label="Navegación de diapositivas"></nav>
-  <div class="counter" id="counter" aria-hidden="true">1 / 10</div>
+  <div class="counter" id="counter" aria-hidden="true">1 / 11</div>
 
   <div class="presenter-toast" id="presenterToast" role="status" aria-live="polite" hidden></div>
 
@@ -722,7 +866,7 @@
   <div class="cursor-glow" id="cursorGlow" aria-hidden="true"></div>
 
   <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
-  <script src="script.js?v=118"></script>
+  <script src="script.js?v=145"></script>
   <script src="presenter-remote-mini.js?v=4"></script>
   <script src="presenter-bridge.js?v=4"></script>
 </body>
